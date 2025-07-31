@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Pro Arcade - Multi Game Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="index.html">
+  <style>
+    :root {
+  --primary: #ffc107;
+  --accent: #17f3ff;
+  --neon-pink: #f12fbb;
+  --glass: rgba(29, 34, 46, 0.87);
+  --card-border: rgba(23, 243, 255, 0.21);
+  --hero-grad: linear-gradient(90deg, #fff0, #17f3ff90 60%, #fff0);
+}
+body {
+  font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+  background: linear-gradient(120deg, #1c2231 0%, #222b38 100%);
+  color: #fff;
+  overflow-x: hidden;
+}
+#particles-js {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Navbar */
+
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 74vh;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  overflow: hidden;
+}
+.video-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.60) blur(1.5px);
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 60%, #232b3a77 66%, #18223b38 100%);
+  mix-blend-mode: lighten;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 0 16px;
+  color: #fff;
+}
+.hero-content h1 {
+  font-family: 'Russo One', 'Orbitron', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: var(--accent);
+  margin-bottom: 15px;
+  text-shadow: 0 12px 55px #000, 0 1px 0 #fff3;
+  animation: neon-glow 2.2s ease-in infinite alternate;
+  display: inline-block;
+}
+@keyframes neon-glow {
+  0% { text-shadow: 0 0 25px #17f3ff90, 0 1px 0 #fff3; }
+  100% { text-shadow: 0 0 44px #17f3ff, 0 1px 0 #fff3; }
+}
+.hero-content h1::after {
+  content: "";
+  display: block;
+  margin: 14px auto 0 auto;
+  width: 110px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--hero-grad);
+  box-shadow: 0 2px 16px #17f3ff70, 0 0 4px #fff3;
+  animation: underline-pop 1.4s cubic-bezier(.63, .05, .39, .93);
+}
+@keyframes underline-pop {
+  from { width: 0; opacity: 0; }
+  to { width: 110px; opacity: 1; }
+}
+.hero-content p {
+  font-size: 1.37rem;
+  color: #e3fdff;
+  font-weight: 400;
+  text-shadow: 0 2px 12px #000a;
+  margin-bottom: 36px;
+  margin-top: 13px;
+  line-height: 1.36;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hero Button */
+.hero-content .btn {
+  font-size: 1.2rem;
+  padding: 12px 44px;
+  border-radius: 30px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  background: linear-gradient(90deg, var(--accent), var(--primary) 95%);
+  color: #191e2c;
+  box-shadow: 0 4px 28px #17f3ff40;
+  border: none;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.17s, color 0.18s, box-shadow 0.17s;
+}
+.hero-content .btn:hover,
+.hero-content .btn:focus {
+  background: linear-gradient(90deg, #17f3ff 20%, #ffc107 80%);
+  color: #191e2c !important;
+  box-shadow: 0 6px 38px #17f3ff40;
+}
+
+/* Section Divider */
+.section-divider {
+  background: linear-gradient(90deg, #fff0, #17f3ff77 60%, #fff0);
+  height: 5px;
+  border: none;
+  margin: 50px 0 32px 0;
+  border-radius: 8px;
+  opacity: .95;
+  box-shadow: 0 0 13px #17f3ff33;
+}
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
+}
+
+/* HOW TO PLAY Neon Glass Cards */
+#howtoplay .howto-glass-card {
+  position: relative;
+  background: rgba(30, 40, 70, 0.68);
+  border-radius: 1.6rem;
+  box-shadow: 0 4px 28px #17f3ff40, 0 2px 8px #f12fbb44;
+  border: 2.2px solid #17f3ff66;
+  padding: 2.2rem 1.1rem 1.7rem 1.1rem;
+  backdrop-filter: blur(7px);
+  transition: box-shadow .19s, transform .18s, border-color .16s;
+  overflow: visible;
+  min-height: 260px;
+  cursor: pointer;
+  z-index: 1;
+}
+#howtoplay .howto-glass-card:hover, #howtoplay .howto-glass-card:focus-within {
+  transform: scale(1.07) rotate(-2deg);
+  box-shadow: 0 0 44px #17f3ffaa, 0 2px 22px #ffc10799;
+  border-color: var(--primary);
+  z-index: 2;
+}
+.howto-step-badge {
+  position: absolute;
+  top: -22px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(90deg, #17f3ff 30%, #ffc107 100%);
+  color: #232b3a;
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center; justify-content: center;
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 1.3px;
+  box-shadow: 0 0 18px #ffc10799, 0 0 12px #17f3ff55;
+  border: 3.5px solid #fff7;
+  animation: badge-pop 1.6s cubic-bezier(.56,-0.05,.33,1.31) infinite alternate;
+}
+@keyframes badge-pop {
+  0% { transform: translateX(-50%) scale(1); }
+  70% { transform: translateX(-50%) scale(1.15); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+.howto-icon-wrap {
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 13px;
+  margin-top: 6px;
+  position: relative;
+}
+.howtoplay-icon {
+  font-size: 2.8rem;
+  filter: drop-shadow(0 0 22px #17f3ff99);
+  text-shadow: 0 2px 16px #17f3ff99, 0 2px 14px #f12fbb88;
+  background: linear-gradient(90deg, #17f3ff 30%, #f12fbb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform .16s cubic-bezier(.8,2,0,.65);
+  animation: howtoPulse 2.2s infinite alternate;
+}
+@keyframes howtoPulse {
+  0% { filter: drop-shadow(0 0 8px #17f3ffbb);}
+  100% { filter: drop-shadow(0 0 30px #ffc107cc);}
+}
+.neon-pulse {
+  display: inline-block;
+  text-shadow: 0 0 22px #17f3ffcc, 0 2px 10px #ffc10788;
+  animation: neonTitlePulse 2s infinite alternate;
+}
+@keyframes neonTitlePulse {
+  0% { text-shadow: 0 0 14px #17f3ffcc, 0 1px 5px #f12fbb; }
+  100% { text-shadow: 0 0 32px #17f3ff, 0 1px 12px #ffc107; }
+}
+.glass-pop {
+  transition: box-shadow .19s, transform .18s, border-color .16s;
+}
+.glass-pop:hover, .glass-pop:focus-within {
+  animation: glassPopAnim .18s cubic-bezier(.7,2,0,.8);
+}
+@keyframes glassPopAnim {
+  0% { transform: scale(1.04) rotate(-1deg);}
+  90% { transform: scale(1.14) rotate(-3deg);}
+  100% { transform: scale(1.07) rotate(-2deg);}
+}
+@media (max-width: 900px) {
+  #howtoplay .howto-glass-card { min-height: 180px; padding: 1.3rem .7rem 1.2rem .7rem; }
+  .howto-step-badge { width:34px; height:34px; font-size:1.04rem; top:-13px; }
+  .howtoplay-icon { font-size: 2.1rem; }
+}
+@media (max-width: 600px) {
+  #howtoplay .howto-glass-card { min-height: 145px; padding: 0.6rem .2rem 0.9rem .2rem; }
+  .howto-step-badge { width:26px; height:26px; font-size:.88rem; top:-10px; }
+}
+.howto-icon-wrap::after {
+  content: "✨";
+  font-size: 1.2rem;
+  position: absolute;
+  top: -7px; right: -20px;
+  opacity: 0;
+  transition: opacity .13s;
+  pointer-events: none;
+}
+.howto-glass-card:hover .howto-icon-wrap::after { opacity: 1; }
+
+/* GAME CARDS */
+.games-grid {
+  display: flex;
+  flex-wrap: wrap !important;
+  gap: 2.5rem 1.5rem;
+  margin-top: 15px;
+  position: relative;
+  z-index: 2;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #17f3ff #232b3a;
+  justify-content: center;
+}
+.games-grid::-webkit-scrollbar {
+  height: 9px;
+  background: #232b3a;
+  border-radius: 6px;
+}
+.games-grid::-webkit-scrollbar-thumb {
+  background: #17f3ff46;
+  border-radius: 7px;
+}
+.game-card {
+  background: var(--glass);
+  border: 2px solid var(--card-border);
+  border-radius: 26px;
+  box-shadow: 0 6px 26px #17f3ff38;
+  flex: 0 0 340px;
+  min-width: 240px;
+  max-width: 97vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .19s cubic-bezier(.22, 1.12, .32, 1), box-shadow .21s;
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.game-card:hover,
+.game-card:focus-within {
+  transform: scale(0.94) rotate(-1deg);
+  box-shadow: 0 0 40px #17f3ffcc, 0 2px 24px #ffc10799;
+  border-color: var(--accent);
+  z-index: 10;
+}
+.game-card .card-badge {
+  position: absolute;
+  top: 12px;
+  left: 13px;
+  background: linear-gradient(90deg, #17f3ff 60%, #ffc107 110%);
+  color: #fff;
+  font-size: 0.92rem;
+  font-family: 'Orbitron', sans-serif;
+  padding: 3px 16px;
+  border-radius: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 7px #17f3ff32;
+  border: 2px solid #fff2;
+  z-index: 2;
+  text-shadow: 0 1px 7px #fff2;
+}
+.game-card .card-img-top {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: contain !important;
+  background: #181e28;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 2px 18px #17f3ff25;
+  border-bottom: 2px solid #17f3ff30;
+  display: block;
+  margin: 0 auto;
+}
+.game-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1.05rem 1rem 1.4rem 1rem;
+  flex: 1 1 0%;
+}
+.game-card .card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.21rem;
+  letter-spacing: 1.1px;
+  color: var(--accent);
+  margin-bottom: 7px;
+  text-shadow: 0 2px 8px #17f3ff37;
+}
+.game-card p {
+  font-size: 1.02rem;
+  color: #f0fdff;
+  margin-bottom: 16px;
+  min-height: 40px;
+  flex: 1 1 auto;
+}
+
+/* Game Card Button */
+.game-card .btn-warning {
+  font-size: 1.06rem;
+  padding: 7px 30px;
+  font-weight: bold;
+  border-radius: 19px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  border: none;
+  color: #191e2c;
+  transition: background .17s, color .14s;
+  letter-spacing: 1px;
+  box-shadow: 0 3px 11px #17f3ff22;
+}
+.game-card .btn-warning:hover,
+.game-card .btn-warning:focus {
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  color: #191e2c !important;
+}
+
+/* REVIEWS / TESTIMONIALS */
+.carousel .card {
+  background: linear-gradient(120deg, #1a2338 30%, #232e4b 100%);
+  border: 2px solid #17f3ff55;
+  border-radius: 26px;
+  box-shadow: 0 0 30px #17f3ff30, 0 2px 18px #ffc10722;
+  color: #fff !important;
+  transition: box-shadow .17s;
+  min-width: 220px;
+}
+.carousel .card:hover {
+  box-shadow: 0 0 60px #17f3ff55, 0 2px 28px #ffc10755;
+  border-color: #17f3ff;
+}
+.carousel .fa-user-circle {
+  color: #17f3ff;
+  text-shadow: 0 2px 14px #17f3ff92;
+}
+.carousel .fa-star,
+.carousel .fa-star-half-alt {
+  color: #ffc107;
+  text-shadow: 0 2px 10px #ffc10744;
+}
+.carousel .blockquote {
+  color: #dffbff !important;
+  font-size: 1.19rem;
+  text-shadow: 0 2px 10px #222c;
+  margin-bottom: 0;
+}
+.carousel .blockquote-footer {
+  color: #81ffe2 !important;
+  font-size: 1.02rem;
+  font-family: 'Orbitron', Arial, sans-serif;
+  opacity: .92;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 2px 10px #17f3ff64;
+}
+
+/* WHY US - Features */
+#whyus {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  margin-bottom: 2.5rem;
+  min-height: 340px;
+  box-shadow: 0 0 44px #17f3ff28, 0 6px 28px #0d112055;
+  background: linear-gradient(120deg, #191e31 40%, #232c47 100%);
+  z-index: 1;
+  padding-bottom: 28px;
+}
+#whyus .section-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.78;
+  filter: blur(0.6px) brightness(0.85) saturate(1.1);
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+#whyus .video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(ellipse at 45% 68%, #232b3add 80%, #181e2bcc 100%);
+  mix-blend-mode: lighten;
+  opacity: 0.89;
+  pointer-events: none;
+}
+#whyus .section-title {
+  color: var(--neon-pink);
+  text-shadow: 0 0 26px #17f3ffcc, 0 2px 20px #f12fbbcc;
+  font-size: 2.4rem;
+  letter-spacing: 2.5px;
+  font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 4;
+}
+#whyus .row.g-4 {
+  position: relative;
+  z-index: 3;
+  margin-top: 0;
+  margin-bottom: 0;
+  gap: 2.2rem 0 !important;
+  justify-content: center;
+}
+#whyus .col-md-4 {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.whyus-card {
+  background: rgba(29, 34, 46, 0.98);
+  border-radius: 1.4rem;
+  box-shadow: 0 4px 32px #17f3ff28, 0 1px 12px #ffc10744;
+  border: 2.5px solid #17f3ff33;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2.3rem 1.2rem 2rem 1.2rem;
+  min-height: 230px;
+  width: 100%;
+  max-width: 330px;
+  margin: 0 auto;
+  transition: box-shadow 0.19s, transform 0.19s, border-color .18s;
+  position: relative;
+}
+.whyus-card:hover,
+.whyus-card:focus-within {
+  box-shadow: 0 0 44px #17f3ffaa, 0 2px 24px #ffc10799;
+  transform: scale(1.04) rotate(-1.5deg);
+  border-color: var(--accent);
+  z-index: 2;
+}
+.whyus-card .features-icon {
+  font-size: 2.8rem;
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, var(--accent), var(--primary) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 18px #17f3ffbb, 0 2px 10px #f12fbb88;
+  filter: drop-shadow(0 0 12px #17f3ff77);
+}
+.whyus-card h5 {
+  color: var(--primary);
+  font-size: 1.22rem;
+  margin-bottom: 13px;
+  font-family: 'Orbitron', Arial, sans-serif;
+  text-shadow: 0 2px 8px #191919bb;
+  letter-spacing: 1.5px;
+}
+.whyus-card p {
+  color: #e3fdff;
+  font-size: 1.04rem;
+  text-shadow: 0 2px 8px #19191980;
+  margin-bottom: 0;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: .7px;
+}
+
+/* FAQ */
+#faq {
+  position: relative;
+  background: linear-gradient(120deg, #191e31 40%, #232c47 100%);
+  border-radius: 1.7rem;
+  box-shadow: 0 0 28px #17f3ff20, 0 3px 18px #f12fbb11;
+  margin-bottom: 2.5rem;
+}
+.faq-divider {
+  height: 3px;
+  background: linear-gradient(90deg, #fff0, #17f3ff77 60%, #fff0);
+  border: none;
+  border-radius: 8px;
+  opacity: .95;
+  box-shadow: 0 0 13px #17f3ff22;
+}
+.bg-faq-glass {
+  background: rgba(32, 43, 60, 0.96) !important;
+  border-radius: 1.1rem !important;
+  margin-bottom: 1.7rem !important;
+  box-shadow: 0 2px 24px #17f3ff18, 0 1px 11px #f12fbb18;
+  border: 1.6px solid #17f3ff36 !important;
+  overflow: hidden;
+}
+.border-neon {
+  border-left: 4px solid var(--neon-pink) !important;
+  border-top: 2px solid var(--accent) !important;
+}
+.accordion-button {
+  background: transparent !important;
+  color: #fff !important;
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 1.2px;
+  border: none !important;
+  border-radius: 1rem 1rem 0 0 !important;
+  box-shadow: none !important;
+  padding: 1.2rem 1.5rem 1.2rem 1.7rem;
+  transition: background .15s, color .14s;
+  outline: none !important;
+  position: relative;
+}
+.accordion-button:not(.collapsed) {
+  color: var(--accent) !important;
+  background: linear-gradient(90deg, #17f3ff17 50%, #f12fbb09 100%) !important;
+  box-shadow: 0 2px 14px #17f3ff22 !important;
+}
+.accordion-button:focus {
+  border: none !important;
+  box-shadow: 0 0 0 2px #17f3ff80 !important;
+}
+.accordion-button .neon-faq-icon {
+  margin-right: 19px;
+  font-size: 2.1rem;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 11px #17f3ffcc);
+  animation: faqPop 1.6s infinite alternate cubic-bezier(.4, 1.3, .8, 1.1);
+  transition: filter .21s, color .18s, transform .21s;
+  color: var(--accent);
+}
+.accordion-button:not(.collapsed) .neon-faq-icon {
+  color: var(--neon-pink);
+  filter: drop-shadow(0 0 18px #f12fbb99) brightness(1.2);
+  transform: scale(1.13) rotate(-13deg);
+}
+@keyframes faqPop {
+  0% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px #17f3ff77);}
+  70% { transform: scale(1.15) rotate(12deg); filter: drop-shadow(0 0 22px #17f3ff);}
+  100% { transform: scale(1.07) rotate(-9deg); filter: drop-shadow(0 0 13px #f12fbbbb);}
+}
+.accordion-body {
+  color: #fff !important;
+  font-size: 1.13rem;
+  background: linear-gradient(120deg, #1d2638ea 60%, #232b42ee 100%);
+  border-radius: 0 0 1.1rem 1.1rem;
+  margin-top: -2px;
+  letter-spacing: .13px;
+  text-shadow: 0 1px 11px #000b;
+  font-family: 'Orbitron', Arial, sans-serif;
+  box-shadow: 0 4px 18px #17f3ff11, 0 1px 8px #f12fbb16;
+  border-top: 2px solid #17f3ff18;
+  border-bottom: 1.3px solid #f12fbb22;
+  transition: background .17s, color .16s;
+}
+.accordion-body strong,
+.accordion-body b {
+  color: #ffc107;
+  text-shadow: 0 1px 4px #191e38bb;
+}
+.accordion-button::after {
+  filter: drop-shadow(0 0 8px #17f3ff88);
+}
+
+/* LEADERBOARD */
+#leaderboard {
+  background: linear-gradient(120deg, #181e31 40%, #232c47 100%);
+  border-radius: 2.2rem;
+  box-shadow: 0 0 40px #17f3ff33, 0 8px 28px #0d112055;
+  position: relative;
+  padding: 2.2rem 0 2.8rem 0;
+  overflow: hidden;
+  margin-bottom: 2.2rem;
+}
+#leaderboard .section-title {
+  color: var(--primary);
+  font-size: 2.5rem;
+  text-shadow: 0 0 28px #17f3ff66, 0 2px 28px #f12fbb99, 0 2px 22px #ffc10777;
+  letter-spacing: 4px;
+  margin-bottom: 38px;
+  font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+  font-weight: 900;
+  position: relative;
+  z-index: 2;
+}
+#leaderboard .table-responsive {
+  background: rgba(23, 31, 51, 0.97);
+  border-radius: 1.6rem;
+  box-shadow: 0 0 40px #17f3ff28, 0 0 28px #232c47aa;
+  padding: 1.2rem 1.2rem 0.2rem 1.2rem;
+  position: relative;
+  overflow-x: auto;
+}
+#leaderboard th,
+#leaderboard td {
+  font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+  font-size: 1.12rem;
+  font-weight: bold;
+  letter-spacing: 1.2px;
+  border: none !important;
+  background: none !important;
+  text-align: center;
+  vertical-align: middle;
+  transition: color .16s;
+  text-shadow: 0 0 7px #1e134a99, 0 1px 7px #17f3ff66;
+  padding: 14px 10px !important;
+}
+#leaderboard thead th {
+  color: #f3caff;
+  font-size: 1.14rem;
+  border-bottom: 3px solid #f12fbb66 !important;
+  text-shadow: 0 0 15px #f12fbb88, 0 2px 12px #17f3ffbb;
+  letter-spacing: 2px;
+}
+#leaderboard tbody tr {
+  background: linear-gradient(90deg, #181e31 80%, #1c2343 120%) !important;
+  border-bottom: 2px solid #232a4122 !important;
+  transition: background .2s, box-shadow .17s, transform .14s;
+}
+#leaderboard tbody tr:hover {
+  background: linear-gradient(90deg, #242d55 60%, #f12fbb33 140%) !important;
+  box-shadow: 0 0 40px #17f3ff77, 0 2px 22px #f12fbb44;
+  transform: scale(1.01);
+  z-index: 2;
+}
+#leaderboard td,
+#leaderboard .fa-user-circle {
+  color: #b488f6 !important;
+  text-shadow: 0 0 12px #b488f6cc, 0 0 18px #f12fbb44, 0 1px 8px #17f3ff77;
+}
+#leaderboard td:first-child {
+  color: #ffc107 !important;
+  font-size: 1.27rem;
+  letter-spacing: 1.4px;
+  text-shadow: 0 0 20px #ffc10799, 0 2px 10px #fff7;
+}
+#leaderboard td:nth-child(3),
+#leaderboard td:nth-child(5) {
+  color: #17f3ff !important;
+  text-shadow: 0 0 12px #17f3ff99, 0 2px 11px #3a37a7cc;
+}
+#leaderboard td:nth-child(4) {
+  color: #f12fbb !important;
+  text-shadow: 0 0 11px #f12fbb88, 0 1px 7px #fff7;
+}
+#leaderboard td:nth-child(2) {
+  color: #ae7cff !important;
+  font-weight: 900;
+  text-shadow: 0 0 16px #f12fbb77, 0 2px 9px #ae7cff55;
+}
+#leaderboard .fa-user-circle {
+  font-size: 1.3em;
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #ae7cff !important;
+  filter: drop-shadow(0 0 14px #f12fbb99);
+  text-shadow: 0 2px 14px #17f3ff92;
+}
+
+/* Neon Gradient Button for Leaderboard */
+.btn-gradient-lead {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 80%);
+  color: #191e2c !important;
+  border: none;
+  border-radius: 2em;
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  box-shadow: 0 0 24px #17f3ff77, 0 2px 18px #ffc10788;
+  text-shadow: 0 2px 12px #fff8;
+  padding: 14px 44px;
+  transition: background 0.2s, color 0.19s, box-shadow 0.2s, transform 0.15s;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+}
+.btn-gradient-lead:hover, .btn-gradient-lead:focus {
+  background: linear-gradient(90deg, #17f3ff 20%, #ffc107 80%);
+  color: #191e2c !important;
+  box-shadow: 0 0 38px #17f3ffbb, 0 2px 32px #ffc10788;
+  transform: scale(1.04) rotate(-1deg);
+}
+.btn-gradient-lead i {
+  margin-right: 10px;
+  filter: drop-shadow(0 0 6px #17f3ff);
+  vertical-align: middle;
+  transition: transform .16s;
+}
+.btn-gradient-lead:hover i {
+  transform: scale(1.13) rotate(-8deg);
+}
+
+/* Responsive: Cards, Grid, Leaderboard, FAQ, Reviews */
+@media (max-width:991px) {
+  #whyus .whyus-card { min-height: 180px; padding: 1.3rem .7rem 1.1rem .7rem; max-width: 95vw; }
+}
+@media (max-width:900px) {
+  .games-grid {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 1.2rem 0.7rem;
+    justify-content: center;
+  }
+  .game-card {
+    flex: 1 1 340px;
+    min-width: 80vw;
+    max-width: 99vw;
+    margin-bottom: 15px;
+  }
+  #leaderboard .table-responsive {
+    padding: 0.2rem 0.2rem 0 0.2rem;
+  }
+  #leaderboard th, #leaderboard td {
+    font-size: 1rem;
+    padding: 9px 5px !important;
+  }
+}
+@media (max-width:600px) {
+  #whyus { border-radius: 1rem; min-height: 220px; }
+  #whyus .section-title { font-size: 1.1rem; }
+  #whyus .whyus-card { min-height: 140px; padding: 1rem .5rem; }
+  .games-grid {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 0.5rem 0;
+    justify-content: center;
+  }
+  .game-card {
+    flex: 1 1 96vw;
+    min-width: 96vw;
+    max-width: 99vw;
+    margin-bottom: 12px;
+  }
+  #leaderboard .section-title { font-size: 1.2rem; }
+  #leaderboard th, #leaderboard td { font-size: .89rem; }
+  #leaderboard .btn-outline-info, .btn-gradient-lead { font-size: .96rem; padding: 10px 18px;}
+  .accordion-button { font-size: 1rem; padding: 1rem 0.6rem 1rem 1.2rem; }
+  .bg-faq-glass { border-radius: .8rem !important; }
+  .site-footer { padding: 24px 0 14px 0; }
+  .site-footer h5 { font-size: 1rem; }
+  .site-footer a { font-size: 0.95em; }
+  .site-footer .fa, .site-footer .fab, .site-footer .fas { font-size: 1.1rem; }
+  .site-footer .footer-copy { font-size: .87rem; }
+  .site-footer .row { flex-direction: column; text-align: center; }
+  .site-footer .col-md-4 { margin-bottom: 1.5rem; }
+}
+
+:root {
+  --primary: #ffc107;
+  --accent: #17f3ff;
+  --neon-pink: #f12fbb;
+}
+
+/* --- NAVBAR VIDEO BAR --- */
+.navbar-video-bar {
+  width: 100vw;
+  height: 38px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  border-bottom: 2px solid var(--accent);
+  background: #171c29;
+}
+.navbar-video-bar video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.7) blur(.6px);
+}
+@media (max-width:600px) {
+  .navbar-video-bar { height: 19px; }
+}
+
+/* --- NAVBAR --- */
+.navbar {
+  background: #191d27ea !important;
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 2px 16px #17f3ff30, 0 1px 7px #ffc10725;
+  font-family: 'Orbitron', Arial, sans-serif;
+  z-index: 20;
+  position: sticky;
+  top: 0;
+}
+.navbar-brand {
+  font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+  font-size: 1.33em;
+  color: #fff !important;
+  letter-spacing: 2px;
+  text-shadow: 0 0 13px #17f3ff77;
+}
+.navbar-brand span {
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-size: 1.22em;
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-weight: bold;
+}
+.navbar-nav .nav-link {
+  color: #fff !important;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1.2px;
+  padding: 8px 16px !important;
+  border-radius: 2em;
+  margin: 0 4px;
+  font-weight: 600;
+  transition: background 0.19s, color 0.18s, box-shadow 0.19s, transform 0.18s;
+  text-shadow: 0 0 7px #17f3ff44;
+}
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  background: linear-gradient(90deg, var(--accent) 40%, var(--primary) 100%);
+  color: #191e2c !important;
+  box-shadow: 0 0 18px #17f3ff88, 0 2px 8px #ffc10744;
+  text-shadow: 0 1px 12px #fff6;
+  outline: none;
+  transform: scale(1.06) translateY(-2px);
+}
+.navbar-toggler {
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 10px #ffc10799;
+  border-radius: 10px;
+}
+.navbar-toggler:focus {
+  outline: none;
+  box-shadow: 0 0 13px #ffc107cc;
+}
+@media (max-width: 992px) {
+  .navbar { padding: 8px 7px; }
+  .navbar-brand { font-size: 1.06em; }
+  .navbar-nav { text-align: center; }
+  .navbar-nav .nav-link {
+    padding: 8px 10vw !important;
+    margin: 6px 0;
+    font-size: 1rem;
+    width: auto;
+    display: block;
+  }
+}
+@media (max-width:600px) {
+  .navbar-brand { font-size: 1em; }
+  .navbar-nav .nav-link { font-size: .98em; padding: 7px 6vw !important; }
+}
+
+/* --- FOOTER --- */
+.site-footer {
+  background: #191e31;
+  border-top: 2.5px solid var(--accent);
+  box-shadow: 0 -3px 18px #17f3ff22, 0 -1px 11px #f12fbb18;
+  color: #e0fdff;
+  padding: 38px 0 20px 0;
+  font-family: 'Orbitron', Arial, sans-serif;
+  letter-spacing: 1.2px;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+}
+.site-footer h5 {
+  color: var(--accent);
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 2.5px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 12px #17f3ff55, 0 2px 7px #f12fbb99;
+}
+.site-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color .18s, text-shadow .18s, background .17s, transform .17s;
+  font-size: 1.09em;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  padding: 2px 7px;
+  margin: 2px 1px;
+  display: inline-block;
+}
+.site-footer a:hover {
+  color: var(--accent);
+  background: #171b29;
+  text-shadow: 0 1px 6px #17f3ff88;
+  transform: scale(1.07);
+}
+.site-footer .fa, .site-footer .fab, .site-footer .fas {
+  color: var(--neon-pink);
+  margin: 0 7px;
+  transition: color .17s, text-shadow .17s, transform .18s;
+  text-shadow: 0 0 12px #f12fbb55;
+  font-size: 1.28em;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  padding: 7px 2px 4px 2px;
+}
+.site-footer .fa:hover, .site-footer .fab:hover, .site-footer .fas:hover {
+  color: var(--primary);
+  text-shadow: 0 0 16px #ffc10799, 0 1px 7px #17f3ff99;
+  background: #232a42;
+  transform: scale(1.17) rotate(-7deg);
+}
+.site-footer p {
+  color: #e0fdff !important;
+}
+.site-footer .col-md-4 {
+  margin-bottom: 1rem;
+}
+.site-footer .footer-copy {
+  margin-top: 12px;
+  color: #81ffe2;
+  font-size: 0.98rem;
+  opacity: 0.80;
+  letter-spacing: .5px;
+}
+
+/* === RESPONSIVE FOOTER === */
+@media (max-width: 992px) {
+  .site-footer {
+    padding: 24px 10px 14px;
+  }
+  .site-footer h5 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .site-footer a {
+    font-size: .98em;
+    display: block;
+    margin: 3px auto;
+  }
+  .site-footer .fa,
+  .site-footer .fab,
+  .site-footer .fas {
+    font-size: 1.2rem;
+    margin: 0 10px;
+  }
+  .site-footer .footer-copy {
+    font-size: .87rem;
+    margin-top: 8px;
+  }
+  .site-footer .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+  }
+  .site-footer .col-md-4 {
+    margin-bottom: 1.3rem;
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .site-footer {
+    padding: 15px 4px 8px;
+  }
+  .site-footer h5 {
+    font-size: .96rem;
+    margin-bottom: 7px;
+    letter-spacing: 1.5px;
+  }
+  .site-footer .fa, 
+  .site-footer .fab, 
+  .site-footer .fas {
+    font-size: 1.05rem;
+    margin: 0 6px;
+  }
+  .site-footer .footer-copy {
+    font-size: .74rem;
+    margin-top: 5px;
+  }
+  .site-footer a {
+    font-size: .92em;
+    padding: 2px 5px;
+  }
+  .site-footer .col-md-4 {
+    margin-bottom: .9rem;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <div id="particles-js"></div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-1" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Navbar Video Bar -->
+  <div class="navbar-video-bar">
+    <video src="data/navbar_loop.mp4" autoplay loop muted></video>
+  </div>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <video class="video-bg" src="data/bg_main.mp4" autoplay loop muted></video>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>DR.RACER PRO</h1>
+      <p>
+        Play <b>12+ Arcade Games</b> — all in one place.<br>
+        <span style="color:#ffc107;">Totally free. Modern, fast, and for everyone!</span>
+      </p>
+      <a href="#games" class="btn shadow-lg">
+        <i class="fas fa-play"></i> Start Playing
+      </a>
+    </div>
+  </section>
+  <hr class="section-divider">
+  <!-- How to Play -->
+ <section class="container py-5" id="howtoplay">
+  <h2 class="fw-bold text-center mb-4 text-info section-title" style="letter-spacing:2px;font-size:2.2rem;">
+    <span class="neon-pulse">How to Play</span>
+  </h2>
+  <div class="row text-center g-4">
+    <div class="col-6 col-md-3">
+      <div class="howto-glass-card glass-pop">
+        <span class="howto-step-badge">1</span>
+        <div class="howto-icon-wrap"><i class="fa fa-gamepad howtoplay-icon neon-glow"></i></div>
+        <h5 class="mb-2">Choose a Game</h5>
+        <p>Pick your favorite from the arcade collection below.</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="howto-glass-card glass-pop">
+        <span class="howto-step-badge">2</span>
+        <div class="howto-icon-wrap"><i class="fa fa-play-circle howtoplay-icon neon-glow"></i></div>
+        <h5 class="mb-2">Play Instantly</h5>
+        <p>Use the simple controls and enjoy — no download needed!</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="howto-glass-card glass-pop">
+        <span class="howto-step-badge">3</span>
+        <div class="howto-icon-wrap"><i class="fa fa-trophy howtoplay-icon neon-glow"></i></div>
+        <h5 class="mb-2">Check Leaderboard</h5>
+        <p>See your score among the top players in the community.</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="howto-glass-card glass-pop">
+        <span class="howto-step-badge">4</span>
+        <div class="howto-icon-wrap"><i class="fa fa-share-alt howtoplay-icon neon-glow"></i></div>
+        <h5 class="mb-2">Share & Compete</h5>
+        <p>Challenge friends and aim for #1 — have fun together!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <hr class="section-divider">
+  <!-- GAME SELECTOR GRID -->
+  <section class="container py-5" id="games">
+    <h2 class="text-center fw-bold mb-5 section-title" style="color:var(--accent);">Choose Your Game</h2>
+    <div class="games-grid flex-wrap">
+      <!-- Game Cards -->
+     
+      <div class="game-card"><span class="card-badge">Runner</span><img src="data/dino_cover.jpg" alt="Dino Game"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Dino Run</h5>
+          <p>Jump over cactus and set a new high score! Classic endless runner.</p><a href="game_dino.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Strategy</span><img src="data/angry_cover.jpg" alt="Angry Birds"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Angry Birds</h5>
+          <p>Slingshot, physics, and smash the pigs! Test your aim and skill.</p><a href="game_angrybirds.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+   
+      <div class="game-card"><span class="card-badge">Classic</span><img src="data/snake_game.jpg" alt="Neon Snake"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Neon Snake</h5>
+          <p>Grow your glowing snake, dodge walls, and beat your best score!</p><a href="game_snake.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Puzzle</span><img src="data/bubble_cover.jpg" alt="Bubble Shooter"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Bubble Shooter</h5>
+          <p>Match and pop the bubbles. Relaxing, addictive puzzle fun!</p><a href="bubble_shooter.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Arcade</span><img src="data/fruit_cover.jpg" alt="Fruit Ninja"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Fruit Ninja</h5>
+          <p>Slice the fruits, avoid bombs, and get the highest combo!</p><a href="fruit_ninja.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Board</span><img src="data/tic_game.jpg" alt="Tic Tac Toe"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Tic Tac Toe</h5>
+          <p>Challenge your friends in this timeless X and O classic.</p><a href="tic_tac_toe.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Match 3</span><img src="data/fruitcrush_cover.jpg"
+          alt="Fruit Crush" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Fruit Crush</h5>
+          <p>Match delicious fruits for points in this juicy puzzle game!</p><a href="candy-crush-fruits.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+         <div class="game-card"><span class="card-badge">Shooter</span><img src="data/plane_cover.jpg"
+          alt="Plane Shooter Assault" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Plane Shooter Assault</h5>
+          <p>Fly and blast enemy planes. Fast-paced arcade shooter action!</p><a href="game_planeshooter.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Sorting</span><img src="data/watersort_cover.jpg" alt="Water Sort"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Water Sort</h5>
+          <p>Pour colors, sort all, and test your brain with water tubes!</p><a href="water-sort.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Runner</span><img src="data/runner_cover.jpg" alt="Runner Dash"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Runner Dash</h5>
+          <p>Jump, dodge, and dash in this endless neon runner!</p><a href="runner-dash.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+       <div class="game-card"><span class="card-badge">Arcade</span><img src="data/driving_cover.jpg" alt="Dr Driving"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Dr. Driving</h5>
+          <p>Dodge traffic, drive fast, and avoid crashes. Pure arcade fun!</p><a href="game_driving.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+      <div class="game-card"><span class="card-badge">Physics</span><img src="data/hill_cover.jpg" alt="Hill Climb"
+          class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Hill Climb Racing</h5>
+          <p>Race, brake, and climb hills with real physics — how far can you go?</p><a href="game_hillclimb.html"
+            class="btn btn-warning">Play</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-divider">
+  <!-- Leaderboard Preview -->
+ <section class="container py-5" id="leaderboard">
+  <div class="leaderboard-bgmarks"></div>
+  <h2 class="fw-bold text-center mb-4 section-title neon-lead-head">
+    <i class="fa fa-trophy trophy-lead-icon"></i> Top Players
+  </h2>
+  <div class="table-responsive lead-glass-wrap">
+    <table class="table neon-table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Game</th>
+          <th>Score</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="lead-gold">
+          <td><span class="lead-medal gold"><i class="fa fa-crown"></i> 1</span></td>
+          <td><i class="fa fa-user-circle lead-player gold"></i> Sara</td>
+          <td>Dr. Driving</td>
+          <td>16,200</td>
+          <td>Lahore</td>
+        </tr>
+        <tr class="lead-silver">
+          <td><span class="lead-medal silver"><i class="fa fa-medal"></i> 2</span></td>
+          <td><i class="fa fa-user-circle lead-player silver"></i> Zain</td>
+          <td>Angry Birds</td>
+          <td>15,950</td>
+          <td>Karachi</td>
+        </tr>
+        <tr class="lead-bronze">
+          <td><span class="lead-medal bronze"><i class="fa fa-medal"></i> 3</span></td>
+          <td><i class="fa fa-user-circle lead-player bronze"></i> Ali</td>
+          <td>Dino Run</td>
+          <td>15,020</td>
+          <td>Islamabad</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center mt-4">
+    <a href="leaderboard.html" class="btn btn-gradient-lead btn-lg px-5 fw-bold">
+      <i class="fa fa-arrow-right"></i> Full Leaderboard
+    </a>
+  </div>
+</section>
+
+  <hr class="section-divider">
+  <!-- Why Pro Arcade / Features -->
+  <section class="container py-5 position-relative" id="whyus">
+  <video autoplay loop muted class="section-video-bg" src="data/bg_section.mp4"></video>
+  <div class="video-overlay"></div>
+  <h2 class="fw-bold text-center mb-4 section-title" style="color:var(--accent);">
+    Why Play at Pro Arcade?
+  </h2>
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="bg-dark rounded-4 p-4 h-100 shadow-sm whyus-card">
+        <i class="fa fa-bolt features-icon"></i>
+        <h5><span class="superfast-neon">Super Fast</span></h5>
+        <p>No lag. Tap and play — works even on slow internet!</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-dark rounded-4 p-4 h-100 shadow-sm whyus-card">
+        <i class="fa fa-shield-alt features-icon"></i>
+        <h5><span class="safefree-neon">Safe & Free</span></h5>
+        <p>Absolutely no ads, no sign-up, no tracking. Just pure games, always free.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-dark rounded-4 p-4 h-100 shadow-sm whyus-card">
+        <i class="fa fa-trophy features-icon"></i>
+        <h5><span class="competetop-neon">Compete for Top</span></h5>
+        <p>Be a weekly winner, get pro tips, and see your name on the wall of fame!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <hr class="section-divider">
+  <!-- FAQ Section -->
+  <section class="container py-5" id="faq">
+    <h2 class="fw-bold text-center mb-4 section-title neon-head" style="color:var(--neon-pink);">
+      Frequently Asked Questions
+    </h2>
+    <hr class="faq-divider">
+    <div class="faq-bgmarks"></div>
+    <div class="accordion accordion-flush" id="faqAccordion">
+      <div class="accordion-item bg-faq-glass border-neon">
+        <h2 class="accordion-header" id="faqHeadingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne"
+            aria-expanded="true" aria-controls="faqCollapseOne">
+            <i class="fa fa-question-circle neon-faq-icon"></i>
+            Are all games really free?
+          </button>
+        </h2>
+        <div id="faqCollapseOne" class="accordion-collapse collapse show fade-in-faq" aria-labelledby="faqHeadingOne"
+          data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Absolutely! Every game is <b>100% free to play</b>, with no sign-up, download, or hidden charges.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item bg-faq-glass border-neon">
+        <h2 class="accordion-header" id="faqHeadingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+            <i class="fa fa-save neon-faq-icon"></i>
+            How is my high score saved?
+          </button>
+        </h2>
+        <div id="faqCollapseTwo" class="accordion-collapse collapse fade-in-faq" aria-labelledby="faqHeadingTwo"
+          data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Your best score is automatically saved in your browser and appears on the leaderboard for everyone to see.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item bg-faq-glass border-neon">
+        <h2 class="accordion-header" id="faqHeadingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+            <i class="fa fa-mobile-alt neon-faq-icon"></i>
+            Can I play on mobile or tablet?
+          </button>
+        </h2>
+        <div id="faqCollapseThree" class="accordion-collapse collapse fade-in-faq" aria-labelledby="faqHeadingThree"
+          data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Yes! All games are <b>fully responsive</b> and can be played on mobile, tablet, or computer — no downloads
+            required.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-divider">
+  <!-- FEATURE STATS -->
+  <section class="container py-5 feature-stats">
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <h1 class="display-3 fw-bold" id="playersCount" style="color:var(--accent);">0</h1>
+        <p class="fs-5">Players Joined</p>
+      </div>
+      <div class="col-md-4">
+        <h1 class="display-3 fw-bold" id="gamesCount" style="color:var(--neon-pink);">0</h1>
+        <p class="fs-5">Popular Games</p>
+      </div>
+      <div class="col-md-4">
+        <h1 class="display-3 fw-bold text-success" id="percentCount">0%</h1>
+        <p class="fs-5">Free & Online</p>
+      </div>
+    </div>
+  </section>
+  <hr class="section-divider">
+  <!-- REVIEWS -->
+  <section class="py-5" style="background:linear-gradient(135deg, #191d27 70%, #1b2838 100%);">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-4 section-title neon-text">Player Reviews</h2>
+    <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="carousel-inner text-center">
+        <!-- Review 1 -->
+        <div class="carousel-item active">
+          <div class="review-card mx-auto">
+            <div class="review-avatar mb-3"><i class="fas fa-user-circle"></i></div>
+            <div class="review-stars mb-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <blockquote class="blockquote mb-0 text-glow">"So many games, one site! Everything works perfectly and the design looks amazing."</blockquote>
+            <footer class="blockquote-footer mt-2">Sara, Lahore</footer>
+          </div>
+        </div>
+        <!-- Review 2 -->
+        <div class="carousel-item">
+          <div class="review-card mx-auto">
+            <div class="review-avatar mb-3"><i class="fas fa-user-circle"></i></div>
+            <div class="review-stars mb-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <blockquote class="blockquote mb-0 text-glow">"Dino and Angry Birds are my favorites. Fast, fun, and smooth gameplay!"</blockquote>
+            <footer class="blockquote-footer mt-2">Ali, Karachi</footer>
+          </div>
+        </div>
+        <!-- Review 3 -->
+        <div class="carousel-item">
+          <div class="review-card mx-auto">
+            <div class="review-avatar mb-3"><i class="fas fa-user-circle"></i></div>
+            <div class="review-stars mb-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <blockquote class="blockquote mb-0 text-glow">"No bugs and super responsive. Love the Hill Climb Racing and the overall look!"</blockquote>
+            <footer class="blockquote-footer mt-2">Zain, Islamabad</footer>
+          </div>
+        </div>
+      </div>
+      <!-- Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon neon-shadow"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon neon-shadow"></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+   <footer class="site-footer py-4 mt-5 border-top">
+  <div class="container text-center text-light">
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <h5 class="fw-bold mb-3">Quick Links</h5>
+        <a href="index.html" class="text-decoration-none d-block">Home</a>
+        <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+        <a href="about.html" class="text-decoration-none d-block">About</a>
+        <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+      </div>
+      <div class="col-md-4 mb-2">
+        <h5 class="fw-bold mb-3">Contact</h5>
+        <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+        <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+        <div>
+          <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+          <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4 mb-2">
+        <h5 class="fw-bold mb-3">Arcade Info</h5>
+        <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Particles.js for background animation -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 45, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": ["#17f3ff", "#ffc107", "#f12fbb"] },
+        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000" } },
+        "opacity": { "value": 0.17, "random": true, "anim": { "enable": false } },
+        "size": { "value": 7, "random": true },
+        "line_linked": { "enable": true, "distance": 130, "color": "#17f3ff44", "opacity": 0.13, "width": 1.3 },
+        "move": { "enable": true, "speed": 2.2, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "repulse" } },
+        "modes": { "repulse": { "distance": 80, "duration": 0.4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+  <script>
+    // Animate "Count Up" for stats, ONLY when section is visible!
+    function animateCount(id, start, end, duration, suffix = "") {
+      let obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        let progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.textContent = Math.floor(progress * (end - start) + start) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else obj.textContent = end + suffix;
+      };
+      requestAnimationFrame(step);
+    }
+    // Utility to check if element is visible
+    function isVisible(elem) {
+      const rect = elem.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.bottom >= 0
+      );
+    }
+    let countsStarted = false;
+    function startCountsIfNeeded() {
+      if (countsStarted) return;
+      const statsSection = document.querySelector('.feature-stats');
+      if (isVisible(statsSection)) {
+        countsStarted = true;
+        animateCount("playersCount", 0, 2000, 1500, "+");
+        animateCount("gamesCount", 0, 12, 1500);
+        animateCount("percentCount", 0, 100, 1500, "%");
+      }
+    }
+    window.addEventListener('scroll', startCountsIfNeeded);
+    window.addEventListener('DOMContentLoaded', () => {
+      // Interactive icons
+      document.querySelectorAll('.howtoplay-icon').forEach(icon => {
+        icon.addEventListener('mouseenter', () => {
+          icon.style.transform = 'scale(1.23) rotate(-8deg)';
+        });
+        icon.addEventListener('mouseleave', () => {
+          icon.style.transform = '';
+        });
+      });
+      // Animate stats if visible on page load
+      startCountsIfNeeded();
+    });
+  </script>
+
+  <div id="particles-js"></div>
+
+  <!-- Your body content goes here -->
+
+  <!-- Sound Elements -->
+  <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>
+  <audio id="clickSound" src="data/single-mouse-click-sound-hd-379373.mp3 preload="auto"></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav" preload="auto"></audio>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 45, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": ["#17f3ff", "#ffc107", "#f12fbb"] },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.17, "random": true },
+        "size": { "value": 7, "random": true },
+        "line_linked": { "enable": true, "distance": 130, "color": "#17f3ff44", "opacity": 0.13, "width": 1.3 },
+        "move": { "enable": true, "speed": 2.2 }
+      },
+      "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "repulse" } },
+        "modes": { "repulse": { "distance": 80, "duration": 0.4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+
+  <!-- TSParticles Advanced Effects -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <script>
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      particles: {
+        number: { value: 60 },
+        color: { value: ["#17f3ff", "#ffc107", "#f12fbb"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 5, random: true },
+        move: { enable: true, speed: 1.8 },
+        links: {
+          enable: true,
+          color: "#17f3ff",
+          distance: 150,
+          opacity: 0.2,
+          width: 1
+        }
+      },
+      background: { color: "transparent" }
+    });
+  </script>
+
+  <!-- Sound + Interaction Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgSound = document.getElementById('bgSound');
+      const clickSound = document.getElementById("clickSound");
+      const hoverSound = document.getElementById("hoverSound");
+
+      // Set volumes
+      bgSound.volume = 0.4;
+      clickSound.volume = 1;
+      hoverSound.volume = 1;
+
+      // Autoplay fix: play when file is ready and user clicks
+      window.addEventListener('click', () => {
+        if (bgSound.readyState >= 3) {
+          bgSound.play().catch(e => console.log("Autoplay failed: ", e));
+        } else {
+          bgSound.addEventListener('canplaythrough', () => {
+            bgSound.play().catch(e => console.log("Delayed autoplay fail: ", e));
+          }, { once: true });
+        }
+      }, { once: true });
+
+      // Hover & click sound effects
+      document.querySelectorAll('.btn, .nav-link').forEach(el => {
+        el.addEventListener('mouseenter', () => hoverSound.play());
+        el.addEventListener('click', () => clickSound.play());
+      });
+
+      // Card hover glow effect
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.boxShadow = '0 0 40px #17f3ffcc, 0 2px 24px #ffc10799';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.boxShadow = '';
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

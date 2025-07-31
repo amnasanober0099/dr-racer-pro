@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sky Rocket Assault – Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(29, 34, 46, 0.90);
+      --card-border: rgba(23, 243, 255, 0.23);
+    }
+    body {
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+      background: transparent;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    #bg-video {
+      position: fixed; left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.27) blur(1px);
+      pointer-events: none;
+    }
+    .content-main { position: relative; z-index: 2; }
+    .main-title {
+      font-size: 1.65rem;
+      text-shadow: 0 0 12px var(--accent), 0 0 2px #fff6;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 2.1rem 0 0.7rem;
+    }
+    .game-card-arcade {
+      background: var(--glass);
+      border: 2.5px solid var(--card-border);
+      border-radius: 1.7rem;
+      box-shadow: 0 8px 35px #17f3ff23, 0 2px 9px #0008;
+      padding: 1.5rem 1.3rem 1.5rem;
+      margin: 1.1rem auto;
+      max-width: 650px;
+    }
+    .game-controls button {
+      min-width: 110px;
+      font-size: 1.01rem;
+      font-family: 'Orbitron';
+      font-weight: bold;
+      border-radius: 18px;
+      margin: 7px;
+      box-shadow: 0 3px 12px #32cd3236;
+    }
+    .btn-start { background: linear-gradient(90deg, var(--accent), var(--primary)); border: none; color: #181818; }
+    .btn-start:hover { background: linear-gradient(90deg, var(--neon-pink), var(--accent)); color: #fff; }
+    .btn-pause { background: linear-gradient(90deg, #ff3860, #ffb677); border: none; }
+    .btn-pause:hover { background: linear-gradient(90deg, #f12fbb, #ff3860); color: #fff; }
+    .btn-restart { background: linear-gradient(90deg, #49fcb1, #0ef); border: none; }
+    .btn-restart:hover { background: linear-gradient(90deg, #0ef, #49fcb1); color: #181818; }
+    .score-badges .badge { font-size: 1.12rem; letter-spacing: 1px; margin-right: 7px;}
+    .score-badges .bg-success { background: linear-gradient(90deg, #17f3ff, #49fcb1) !important; color: #181818; }
+    .score-badges .bg-info { background: linear-gradient(90deg, #ffc107, #17f3ff) !important; color: #181818; }
+    .score-badges .bg-warning { background: linear-gradient(90deg, #ff3860, #ffb677) !important; color: #181818; }
+    .controls-row {
+      background: rgba(28, 36, 55, .97);
+      padding: 0.7rem 0;
+      border-radius: 1rem;
+      box-shadow: 0 3px 18px #17f3ff1a;
+      margin: 0.6rem 0 1.2rem;
+    }
+    .arcade-controls span.badge {
+      font-size: 1.06rem;
+      background: linear-gradient(90deg, #17f3ff, #32cd32) !important;
+      color: #1b232b;
+      margin-right: 6px;
+    }
+    .leaderboard-btn {
+      background: linear-gradient(90deg, #32cd32, #17f3ff);
+      color: #222;
+      font-weight: bold;
+      border: none;
+      border-radius: 1.5rem;
+      padding: 5px 23px;
+      font-size: 1.02rem;
+      box-shadow: 0 0 13px #17f3ff44, 0 0 3px var(--primary);
+    }
+    .leaderboard-btn:hover {
+      background: linear-gradient(90deg, #f12fbb, #17f3ff);
+      color: #fff;
+    }
+    .plane-canvas {
+      width: 100%;
+      max-width: 700px;
+      height: 340px;
+      display: block;
+      margin: auto;
+      border-radius: 1.2rem;
+      border: 5px solid var(--accent);
+      background: #1b202e;
+      box-shadow: 0 0 40px #191b29, 0 8px 44px #17f3ff17;
+      margin: 1rem auto 1.2rem;
+    }
+    @media(max-width:750px) { .plane-canvas { max-width: 99vw; } }
+    @media(max-width:480px) {
+      .game-card-arcade { padding: .6rem .3rem; }
+      .plane-canvas { height: 180px; border-radius: .6rem; }
+    }
+    footer {
+      background: #181d27;
+      border-top: 2px solid #17f3ff33;
+      color: #fff8;
+      margin-top: 35px;
+      font-size: 1.01rem;
+    }
+    .modal-proarcade {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,19,36,0.97);
+      z-index: 11111;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-proarcade.show { display: flex; }
+    .modal-proarcade .card {
+      max-width: 360px;
+      border: 3px solid var(--accent);
+      border-radius: 1.25rem;
+      box-shadow: 0 0 34px #17f3ff77, 0 2px 28px #f12fbb40;
+      background: rgba(27,32,60,0.96);
+      color: #dbffe6;
+      padding: 1.6rem 1.2rem 1.2rem;
+      font-family: 'Orbitron',sans-serif;
+      font-size: 1.08rem;
+      letter-spacing: 0.1px;
+      text-shadow: 0 2px 12px #17f3ff50;
+      position: relative;
+      animation: popup-in .22s cubic-bezier(.3,1.2,.5,1.2);
+    }
+    .modal-proarcade .card h4 { color: var(--accent); text-shadow: 0 2px 18px #17f3ff77; }
+    .modal-proarcade ul, .modal-proarcade li { color: #fff; }
+    .modal-proarcade .btn-danger {
+      background: linear-gradient(90deg, #ff3860, #ffb677);
+      border: none;
+      font-weight: bold;
+      border-radius: 2rem;
+      color: #fff;
+      box-shadow: 0 2px 13px #f12fbb50;
+    }
+    @keyframes popup-in { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+ 
+.plane-canvas { touch-action: none; }
+@media (max-width:600px) {
+  .game-card-arcade { padding: 0.3rem 0.05rem; }
+  .plane-canvas { height: 148px; border-radius: 0.5rem; }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Background Video -->
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="data/bg_section.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Sounds -->
+  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav"></audio>
+
+  <div class="content-main">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="main-title"><i class="fas fa-jet-fighter-up text-success"></i> Sky Rocket Assault</div>
+    <main class="container game-wrap">
+      <div class="game-card-arcade">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+            <a href="leaderboard.html" class="btn btn-outline-info me-2"><i class="fas fa-trophy"></i> Leaderboard</a>
+          <a class="btn btn-outline-success mb-2" href="#" id="howToPlayBtn"><i class="fas fa-question-circle"></i> How to Play</a>
+        </div>
+        <canvas id="planeCanvas" width="700" height="340" class="plane-canvas"></canvas>
+        <div class="d-flex flex-wrap gap-3 justify-content-center game-controls">
+          <button id="btnStart" class="btn btn-start"><i class="fas fa-play"></i> Start</button>
+          <button id="btnPause" class="btn btn-pause"><i class="fas fa-pause"></i> Pause</button>
+          <button id="btnRestart" class="btn btn-restart"><i class="fas fa-undo"></i> Restart</button>
+        </div>
+        <div class="score-badges text-center mt-4">
+          <span id="scoreLabel" class="badge bg-success me-2">Score: 0</span>
+          <span id="highScoreLabel" class="badge bg-info me-2">High Score: 0</span>
+          <span id="livesLabel" class="badge bg-warning">Lives: 3</span>
+        </div>
+        <div class="controls-row text-center mt-4">
+          <b>Controls:</b>
+          <span class="arcade-controls">
+            <span class="badge"><i class="fas fa-arrow-left"></i>/<i class="fas fa-arrow-right"></i></span> Move
+            <span class="badge"><i class="fas fa-arrow-up"></i>/<i class="fas fa-arrow-down"></i></span> Up/Down
+            <span class="badge"><kbd>Space</kbd></span> Fire
+          </span>
+        </div>
+      </div>
+    </main>
+    <!-- HOW-TO-PLAY MODAL -->
+    <div id="howtoplayModal" class="modal-proarcade">
+      <div class="card p-4 position-relative">
+        <button class="btn btn-danger position-absolute top-0 end-0 m-2" onclick="hideHowToPlay()"><i class="fas fa-times"></i></button>
+        <h4 class="mb-2 text-info"><i class="fas fa-question-circle"></i> How to Play</h4>
+        <ul>
+          <li><span style="color:#17f3ff;"><b>Arrow keys:</b></span> Move jet</li>
+          <li><span style="color:#ffc107;"><b>Space:</b></span> Fire neon rocket</li>
+          <li><span style="color:#32cd32;">Destroy enemy planes &amp; avoid bullets.</span></li>
+          <li><span style="color:#f12fbb;">Lives: 3</span></li>
+        </ul>
+      </div>
+    </div>
+    <footer class="py-4 mt-5 border-top">
+      <div class="container text-center text-light">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Quick Links</h5>
+            <a href="index.html" class="text-decoration-none d-block">Home</a>
+            <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+            <a href="about.html" class="text-decoration-none d-block">About</a>
+            <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Contact</h5>
+            <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+            <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+            <div>
+              <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+              <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Arcade Info</h5>
+            <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="game_planeshooter.js"></script>
+  <script>
+    // --- BG MUSIC: Only play on first user interaction ---
+    const bgMusic = document.getElementById('bgMusic');
+    let bgMusicStarted = false;
+    function startBgMusic() {
+      if (!bgMusicStarted) {
+        bgMusic.volume = 0.35;
+        bgMusic.play().catch(()=>{});
+        bgMusicStarted = true;
+      }
+    }
+    ['click', 'keydown', 'touchstart'].forEach(ev => {
+      window.addEventListener(ev, startBgMusic, { once: true });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) bgMusic.pause();
+      else if (bgMusicStarted) bgMusic.play().catch(()=>{});
+    });
+
+    // Hover sound for all btns & nav-links
+    const hoverSound = document.getElementById('hoverSound');
+    document.querySelectorAll('.btn, .nav-link, .leaderboard-btn').forEach(btn => {
+      btn.addEventListener('mouseenter', function () {
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+      });
+    });
+
+    // Modal controls
+    const howModal = document.getElementById('howtoplayModal');
+    document.getElementById('howToPlayBtn').onclick = e => {
+      e.preventDefault();
+      howModal.classList.add('show');
+      setTimeout(() => howModal.querySelector('button').focus(), 140);
+    };
+    function hideHowToPlay() { howModal.classList.remove('show'); }
+    window.addEventListener('keydown', e => {
+      if (howModal.classList.contains('show') && (e.key === 'Escape' || e.key === 'Esc')) hideHowToPlay();
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

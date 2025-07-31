@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About Us | Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(30,36,50,0.91);
+      --glass-card: rgba(24,32,55,0.86);
+      --card-3d: 0 10px 40px #17f3ff3b, 0 2px 8px #0009, 0 0 0 4px #f12fbb15;
+    }
+    html,body {height: 100%;}
+    body {
+      min-height: 100vh;
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: linear-gradient(120deg,#191e29 0%,#232c38 100%);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* tsParticles BG */
+    #particles-js { position:fixed; inset:0; z-index:0; pointer-events:none;}
+    /* Neon grid overlay */
+    .neon-grid-bg {
+      position:fixed; z-index:1; inset:0; pointer-events:none; opacity:0.10;
+      background: repeating-linear-gradient(90deg, #17f3ff 0px, #17f3ff 2px, transparent 2px, transparent 60px), 
+                  repeating-linear-gradient(0deg, #17f3ff 0px, #17f3ff 2px, transparent 2px, transparent 60px);
+      animation: gridmove 9s linear infinite alternate;
+    }
+    @keyframes gridmove { to{ background-position: 60px 60px,60px 60px; } }
+    /* NAVBAR */
+    .navbar {
+      background: #191d27f8 !important;
+      border-bottom: 3px solid var(--accent);
+      border-radius: 0 0 22px 22px;
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      font-size: 1.12rem;
+      box-shadow: 0 4px 28px #17f3ff18;
+      position:relative;
+      z-index:4;
+    }
+    .navbar-brand {
+      font-size: 2rem; color: var(--primary);
+      letter-spacing: 2px; text-shadow: 0 0 16px #ffc107a7;
+    }
+    .navbar-brand span { color: var(--accent);}
+    .navbar .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      border-radius: 2em;
+      margin: 0 4px;
+      padding: 8px 16px !important;
+      transition: background 0.19s, color 0.18s, box-shadow 0.19s;
+    }
+    .navbar .nav-link.active, .navbar .nav-link:hover, .navbar .nav-link:focus {
+      background: linear-gradient(90deg, var(--accent) 40%, var(--primary) 100%);
+      color: #191e2c !important;
+      box-shadow: 0 0 18px #17f3ff88, 0 2px 8px #ffc10744;
+      text-shadow: 0 1px 12px #fff6;
+      outline: none;
+    }
+    /* === Main About Hero === */
+    .about-main-hero {
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+      gap:44px; min-height:65vh; z-index:2; position:relative; margin:0 auto 28px auto;
+      padding:92px 0 32px 0;
+      max-width: 1180px;
+    }
+    .about-pic-col {
+      flex:0 0 260px; text-align:center;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      animation: floatUp 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatUp {
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-18px);}
+    }
+    .profile-glow-pic {
+      width: 210px; height: 210px;
+      border-radius: 50%;
+      border: 7px solid var(--accent);
+      background: #232b38;
+      overflow: hidden;
+      box-shadow: 0 0 70px #17f3ff90, 0 0 0 20px #f12fbb22;
+      animation: neon-pulse 2.6s infinite alternate;
+      margin-bottom: 1.5rem;
+      margin-top:1rem;
+      position:relative;
+      z-index:2;
+      transition: box-shadow .36s, border-color .18s;
+      will-change: transform;
+      cursor: pointer;
+      perspective:600px;
+      transform-style: preserve-3d;
+    }
+    .profile-glow-pic img {
+      width: 100%; height: 100%; object-fit:cover; border-radius:50%; filter: brightness(1.11);
+      transition: transform 0.33s cubic-bezier(.25,1.19,.7,1.22);
+      will-change: transform;
+    }
+    .profile-glow-pic.tilted img { transform: rotateY(var(--tiltx,0deg)) rotateX(var(--tilty,0deg)) scale(1.08);}
+    @keyframes neon-pulse {
+      from { box-shadow: 0 0 32px var(--accent), 0 0 0 12px #232b38;}
+      to { box-shadow: 0 0 100px #f12fbbcc, 0 0 0 22px #ffc10766;}
+    }
+    .dev-name {
+      color: var(--primary);
+      font-size: 1.48em;
+      font-weight: 700;
+      letter-spacing:1.2px;
+      text-shadow: 0 2px 14px #17f3ff77;
+      margin-bottom: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: gradtext 2.7s alternate infinite;
+    }
+    @keyframes gradtext {
+      from{ background-position: 0 0;}
+      to{ background-position: 100% 0;}
+    }
+    .dev-title { color: var(--accent); font-size:1.12em; font-weight:600; margin-bottom: 0.5rem; text-shadow: 0 0 12px #17f3ff77;}
+    .dev-social a {
+      color: var(--accent); font-size:1.35em; margin: 0 11px; transition: color 0.21s, text-shadow 0.21s;
+      text-shadow: 0 2px 10px #17f3ff44;
+    }
+    .dev-social a:hover { color: var(--primary); text-shadow: 0 0 8px #ffc107bb; }
+    /* === About Us Info === */
+    .about-text-block {
+      flex:1 1 390px; min-width:270px;
+      padding:18px 22px;
+    }
+    .about-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size:2.3em; font-weight:bold; color: var(--primary);
+      letter-spacing:1.7px; margin-bottom:8px;
+      text-shadow: 0 0 30px #17f3ff77;
+      animation: title-glow 2s infinite alternate;
+      background: linear-gradient(90deg,#ffc107,#f12fbb,#17f3ff,#ffc107 80%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradtext 3.2s alternate infinite;
+    }
+    .about-lead {
+      font-size:1.14em; color:#e0fdff; max-width:570px; margin-bottom:14px;
+      text-shadow:0 2px 14px #181d21c8;
+    }
+    .about-badges {
+      display: flex; flex-wrap: wrap; gap:13px 13px; margin-bottom:17px;
+      animation: floatUp 2.2s .5s ease-in-out infinite alternate;
+    }
+    .about-badge {
+      background: linear-gradient(90deg,#17f3ffbb 60%,#f12fbb 100%);
+      color: #191e2c; border-radius:18px; padding:7px 20px; font-size:1.09em;
+      font-family: 'Orbitron', Arial, sans-serif; box-shadow: 0 0 14px #17f3ff60;
+      font-weight:700;
+      text-shadow:0 1px 6px #fff7;
+      animation: badge-pulse 1.6s infinite alternate;
+    }
+    @keyframes badge-pulse {
+      from { box-shadow: 0 0 12px #17f3ff80;}
+      to { box-shadow: 0 0 25px #17f3ffcc, 0 0 15px #f12fbb99;}
+    }
+    .about-btn {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #191e31;
+      border: none; /* No border */
+      border-radius: 28px;
+      padding: 11px 42px;
+      font-size: 1.13em;
+      font-family: 'Orbitron',sans-serif;
+      font-weight: bold;
+      letter-spacing: 1.1px;
+      /* No box-shadow for a flat look */
+      transition: background .23s, color .19s, transform .14s;
+      text-shadow: 0 1px 7px #fff7;
+      margin-top: 10px;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .about-btn:hover {
+      background: linear-gradient(90deg, var(--neon-pink), var(--accent) 95%);
+      color: #191e31;
+      transform: scale(1.07);
+      box-shadow: none !important;
+    }
+
+    /* Info Cards 3D Glass */
+    .about-section-cards {
+      max-width: 1250px; margin: 0 auto; z-index: 2; position:relative; 
+      margin-bottom: 70px;
+      margin-top: 10px;
+      perspective: 1200px;
+    }
+    .card-row {
+      display: flex;
+      gap:24px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .about-card {
+      background: var(--glass-card);
+      border-radius: 26px;
+      box-shadow: var(--card-3d);
+      padding: 2.1rem 1.4rem 1.55rem 1.4rem;
+      color: #fff;
+      min-width: 270px;
+      min-height: 185px;
+      flex:1 1 290px;
+      max-width:370px;
+      position: relative;
+      margin-bottom: 22px;
+      transition: box-shadow .22s, transform .22s, border-color .15s;
+      border:2.5px solid transparent;
+      overflow: hidden;
+      opacity:0; transform: translateY(80px) scale(.98);
+      animation: fade-in-up2 1.2s cubic-bezier(.25,1.14,.55,1.12) forwards;
+      will-change: transform;
+      cursor:pointer;
+    }
+    .about-card.tilted { box-shadow: 0 18px 80px #17f3ff77, 0 4px 44px #f12fbb44; border-color: var(--primary);}
+    .card-row .about-card:nth-child(1){animation-delay:.13s;}
+    .card-row .about-card:nth-child(2){animation-delay:.28s;}
+    .card-row .about-card:nth-child(3){animation-delay:.44s;}
+    .card-row .about-card:nth-child(4){animation-delay:.66s;}
+    .card-row .about-card:nth-child(5){animation-delay:.88s;}
+    .card-row .about-card:nth-child(6){animation-delay:1.09s;}
+    @keyframes fade-in-up2 {
+      0% { opacity: 0; transform: translateY(80px) scale(.98);}
+      65%{ opacity:.85;}
+      100%{ opacity: 1; transform: translateY(0) scale(1);}
+    }
+    .about-card .icon {
+      font-size:2.2em;
+      color:var(--primary);
+      margin-bottom:10px;
+      text-shadow:0 2px 18px #17f3ff99;
+    }
+    .about-card-title {
+      font-family:'Orbitron',sans-serif; color:var(--accent); font-size:1.22em;
+      font-weight:600; margin-bottom:10px; letter-spacing:.8px;
+      text-shadow:0 1px 13px #17f3ff69;
+    }
+    .about-card-desc { color:#e0fdff; font-size:1.09em; margin-bottom:0;}
+    .about-card-list { color:#ffc107; font-size:1.02em; margin:0 0 0 1em; padding:0; }
+    .about-card-list li{ margin-bottom: 6px;}
+    /* Timeline Section */
+    .timeline-section {
+      max-width: 1100px;
+      margin: 0 auto 65px auto;
+      padding: 32px 0;
+      position: relative;
+    }
+    .timeline-title {
+      font-family:'Orbitron',sans-serif;
+      color: var(--accent);
+      font-size: 2em;
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+      text-align:center;
+      text-shadow: 0 2px 19px #17f3ff77;
+      font-weight: bold;
+    }
+    .timeline {
+      border-left: 4px solid var(--accent);
+      margin-left: 40px;
+      padding-left: 32px;
+      position:relative;
+    }
+    .timeline-event {
+      margin-bottom: 38px;
+      position:relative;
+      opacity:0;
+      transform:translateY(35px);
+      animation: fade-in-up2 1.5s forwards;
+    }
+    .timeline-event:nth-child(1){ animation-delay:1.22s;}
+    .timeline-event:nth-child(2){ animation-delay:1.36s;}
+    .timeline-event:nth-child(3){ animation-delay:1.5s;}
+    .timeline-dot {
+      position: absolute;
+      left: -48px; top: 4px;
+      width: 21px; height: 21px;
+      background: var(--primary);
+      border-radius:50%;
+      box-shadow: 0 0 22px #ffc107cc, 0 0 0 6px #17f3ff44;
+      border:3.5px solid var(--accent);
+      z-index:1;
+    }
+    .timeline-year {
+      font-family:'Orbitron',sans-serif;
+      color:var(--accent);
+      font-weight:bold;
+      font-size:1.1em;
+      margin-bottom:6px;
+    }
+    .timeline-content {
+      color: #ffe492;
+      font-size: 1.08em;
+      line-height: 1.62;
+    }
+    @media (max-width:1000px){
+      .about-main-hero{padding-top:40px;}
+      .about-section-cards{padding:0 4vw;}
+      .card-row{gap:14px;}
+      .timeline-section{padding:10px 4vw;}
+      .timeline{margin-left:10px;padding-left:18px;}
+    }
+    @media (max-width:700px){
+      .about-main-hero{flex-direction:column;gap:0;}
+      .about-pic-col{margin-bottom:0;}
+      .about-section-cards{padding:0 0;}
+      .card-row{flex-direction:column;}
+      .about-card{max-width:98vw;}
+    }
+    @media (max-width:600px){
+      .profile-glow-pic{width:85px;height:85px;}
+      .about-main-hero{padding-top:12px;}
+      footer{padding:20px 0 7px 0;}
+    }
+    /* Footer */
+    footer {
+      background: #191e31;
+      border-top: 2.5px solid var(--accent);
+      box-shadow: 0 -3px 18px #17f3ff22, 0 -1px 11px #f12fbb18;
+      color: #e0fdff;
+      padding: 38px 0 20px 0;
+      font-family: 'Orbitron', Arial, sans-serif;
+      letter-spacing: 1.2px;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+      margin-top: 30px;
+    }
+    footer h5 {
+      color: var(--accent);
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 2.5px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 12px #17f3ff55, 0 2px 7px #f12fbb99;
+    }
+    .footer-link, .footer-link:visited {
+      color: var(--primary);
+      text-decoration: none;
+      display: block;
+      font-size: 1.09em;
+      letter-spacing: 1px;
+      margin: 2px 0 2px 0;
+      text-align: center;
+      transition: color .18s, text-shadow .18s;
+    }
+    .footer-link:hover {
+      color: var(--accent);
+      text-shadow: 0 1px 6px #17f3ff88;
+    }
+    footer .fa, footer .fab, footer .fas {
+      color: var(--neon-pink);
+      margin: 0 7px;
+      transition: color .17s, text-shadow .17s;
+      text-shadow: 0 0 12px #f12fbb55;
+    }
+    footer .fa:hover, footer .fab:hover, footer .fas:hover {
+      color: var(--primary);
+      text-shadow: 0 0 16px #ffc10799, 0 1px 7px #17f3ff99;
+    }
+    footer p {
+      color: #e0fdff !important;
+    }
+    footer .col-md-4 {
+      margin-bottom: 1rem;
+    }
+    .about-btn,
+.about-btn:after,
+.about-btn:before {
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  text-decoration: none !important;
+  margin-bottom: 0 !important;
+  display: inline-block;
+}
+.about-btn + * {
+  border: none !important;
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="neon-grid-bg"></div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-1" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- About Section Hero -->
+  <div class="about-main-hero container">
+    <div class="about-pic-col">
+      <div class="profile-glow-pic" id="profilePic3D">
+        <img src="data/picf.jpg" alt="Amna Sanober">
+      </div>
+      <div class="dev-name">Amna Sanober</div>
+      <div class="dev-title">Founder, UI/UX Developer & Designer</div>
+      <div class="dev-social mt-2">
+        <a href="mailto:info@proarcade.com" title="Email"><i class="fas fa-envelope"></i></a>
+        <a href="https://wa.me/921234567890" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="about-text-block">
+      <div class="about-title">About Us</div>
+      <div class="about-lead">
+        <b>Pro Arcade</b> is a next-generation, free and responsive multi-game platform.<br>
+        <span style="color:var(--primary)">Our aim:</span> Making joyful, ad-free gaming available for all ages, everywhere.<br>
+        <span style="color:var(--accent)">UI/UX designed to delight.</span>
+      </div>
+      <div class="about-badges">
+        <span class="about-badge">No Ads</span>
+        <span class="about-badge">No Sign Up</span>
+        <span class="about-badge">Made in Pakistan</span>
+        <span class="about-badge">Safe & Secure</span>
+        <span class="about-badge">Mobile Friendly</span>
+      </div>
+      <a href="contact.html" class="about-btn">Let's Connect</a>
+    </div>
+  </div>
+  <!-- Neon Cards Section -->
+  <div class="about-section-cards">
+    <div class="card-row">
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-lightbulb"></i></div>
+        <div class="about-card-title">Our Vision</div>
+        <div class="about-card-desc">
+          To be the most loved, accessible, and secure online arcade for everyone. Play anywhere, anytime, on any device!
+        </div>
+      </div>
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-rocket"></i></div>
+        <div class="about-card-title">Mission</div>
+        <div class="about-card-desc">
+          Seamless ad-free gaming, instant fun, and a modern UI—no downloads, just tap and play!
+        </div>
+      </div>
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-code"></i></div>
+        <div class="about-card-title">Technology</div>
+        <ul class="about-card-list">
+          <li>HTML5, CSS3, JavaScript</li>
+          <li>Bootstrap, jQuery</li>
+          <li>Fully responsive design</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-row">
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-trophy"></i></div>
+        <div class="about-card-title">Achievements</div>
+        <div class="about-card-desc">
+          <ul class="about-card-list">
+            <li>2,000+ players in the first month</li>
+            <li>12+ unique games in one hub</li>
+            <li>Featured weekly top scorers</li>
+          </ul>
+        </div>
+      </div>
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-users"></i></div>
+        <div class="about-card-title">Why Pro Arcade?</div>
+        <div class="about-card-desc">
+          <ul class="about-card-list">
+            <li>No sign up, no distractions</li>
+            <li>Modern neon UI/UX</li>
+            <li>Fast, safe, and secure</li>
+          </ul>
+        </div>
+      </div>
+      <div class="about-card tilt3d">
+        <div class="icon"><i class="fa fa-star"></i></div>
+        <div class="about-card-title">What's Next?</div>
+        <div class="about-card-desc">
+          <ul class="about-card-list">
+            <li>More games (Chess, Sudoku, Word, etc.)</li>
+            <li>Player profiles & social challenges</li>
+            <li>Mobile-first features coming soon!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Journey Timeline -->
+  <div class="timeline-section">
+    <div class="timeline-title">Our Journey</div>
+    <div class="timeline">
+      <div class="timeline-event">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2025</div>
+        <div class="timeline-content">Pro Arcade launched with a vision for modern, easy-access gaming. A platform made by gamers, for everyone.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2025-26</div>
+        <div class="timeline-content">Added 12+ new games, responsive neon UI, weekly leaderboard. Crossed 2,000 users milestone within the first month!</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">Future</div>
+        <div class="timeline-content">Next: Add user profiles, multiplayer, new brain games, social features, and real-time tournaments for the Pro Arcade family!</div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="py-4 border-top mt-0">
+    <div class="container text-center text-light">
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Quick Links</h5>
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="leaderboard.html" class="footer-link">Leaderboard</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Contact</h5>
+          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+          <div>
+            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Arcade Info</h5>
+          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Sounds -->
+  <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>
+  <audio id="snd-hover" src="data/hover_sound.wav" preload="auto"></audio>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js"></script>
+  <script>
+    // tsParticles: Neon depth bg
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      particles: {
+        number: { value: 66 },
+        color: { value: ["#17f3ff", "#ffc107", "#f12fbb"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.19 },
+        size: { value: 6, random: true },
+        move: { enable: true, speed: 1.1 },
+        links: {
+          enable: true,
+          color: "#17f3ff",
+          distance: 115,
+          opacity: 0.23,
+          width: 1.7
+        }
+      },
+      background: { color: "transparent" }
+    });
+    // BG Music: play on first user interaction
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgSound = document.getElementById('bgSound');
+      bgSound.volume = 0.33;
+      let played = false;
+      function tryPlayBg() {
+        if (!played) {
+          bgSound.play().catch(()=>{});
+          played = true;
+        }
+      }
+      window.addEventListener('click', tryPlayBg, { once: true });
+      window.addEventListener('keydown', tryPlayBg, { once: true });
+      window.addEventListener('touchstart', tryPlayBg, { once: true });
+      // Sound for interactive blocks (profile, cards, btn, nav)
+      function playHover(e) {
+        let audio = document.getElementById('snd-hover');
+        audio.pause();
+        audio.currentTime = 0;
+        audio.play();
+      }
+      document.querySelectorAll(
+        '.profile-glow-pic, .about-btn, .footer-link, .navbar-nav .nav-link, .dev-social a, .about-card'
+      ).forEach(el=>{
+        el.addEventListener('mouseenter', playHover);
+        el.addEventListener('click', playHover);
+        el.addEventListener('touchstart', playHover, {passive:true});
+      });
+    });
+
+    // 3D Tilt on profile pic and cards
+    function add3DTilt(selector, maxTilt=15) {
+      document.querySelectorAll(selector).forEach(card=>{
+        card.addEventListener('mousemove', e=>{
+          let rect = card.getBoundingClientRect();
+          let x = e.clientX - rect.left, y = e.clientY - rect.top;
+          let cx = rect.width/2, cy = rect.height/2;
+          let dx = (x-cx)/cx, dy = (y-cy)/cy;
+          let rx = -dy*maxTilt, ry = dx*maxTilt;
+          card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.07)`;
+          card.classList.add('tilted');
+          if(card.classList.contains('profile-glow-pic') || card.id==='profilePic3D'){
+            card.classList.add('tilted');
+            card.style.setProperty('--tiltx', ry+'deg');
+            card.style.setProperty('--tilty', rx+'deg');
+          }
+        });
+        card.addEventListener('mouseleave', e=>{
+          card.style.transform = '';
+          card.classList.remove('tilted');
+          if(card.classList.contains('profile-glow-pic') || card.id==='profilePic3D'){
+            card.style.setProperty('--tiltx', '0deg');
+            card.style.setProperty('--tilty', '0deg');
+          }
+        });
+        card.addEventListener('touchstart',()=>card.classList.add('tilted'));
+        card.addEventListener('touchend',()=>card.classList.remove('tilted'));
+      });
+    }
+    window.addEventListener('DOMContentLoaded', ()=>{
+      add3DTilt('.profile-glow-pic',20);
+      add3DTilt('.about-card',16);
+      // Animate timeline on scroll
+      function revealTimeline(){
+        let tEvents = document.querySelectorAll('.timeline-event');
+        tEvents.forEach(e=>{
+          let rect = e.getBoundingClientRect();
+          if(rect.top < window.innerHeight-120){ e.style.opacity=1; e.style.transform='translateY(0)'; }
+        });
+      }
+      revealTimeline(); window.addEventListener('scroll',revealTimeline);
+    });
+  </script>
+</body>
+</html>

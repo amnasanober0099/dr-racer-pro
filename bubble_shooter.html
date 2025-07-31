@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Bubble Shooter – Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --accent: #17f3ff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+      background: #111;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+      min-width: 100%;
+      min-height: 100%;
+      background: #111;
+    }
+
+    .bg-video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(17, 17, 24, 0.67);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .navbar,
+    .game-top-bar,
+    .gamebox,
+    .arcade-controls,
+    footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .navbar {
+      background: #191d27ea !important;
+      border-bottom: 2px solid var(--accent);
+      min-height: 70px;
+      box-shadow: 0 6px 24px #17f3ff22;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .navbar-brand {
+      font-size: 2rem;
+      letter-spacing: 2px;
+      padding: 0 10px;
+    }
+
+    .navbar-brand span {
+      color: var(--accent);
+      text-shadow: 0 2px 14px var(--accent);
+    }
+
+    .game-top-bar {
+      max-width: 420px;
+      margin: 38px auto 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(17, 24, 39, 0.89);
+      border: 2px solid var(--accent);
+      border-radius: 1.3rem 1.3rem 0 0;
+      box-shadow: 0 2px 14px #17f3ff20;
+      padding: 12px 18px 10px 18px;
+      z-index: 2;
+      position: relative;
+    }
+
+    #hud {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 1.1rem;
+      margin: 0;
+      background: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .game-actions {
+      display: flex;
+      gap: 9px;
+      margin: 0;
+      z-index: 4;
+    }
+
+    .btn-action {
+      background: linear-gradient(90deg, #17f3ff, #49fcb1);
+      color: #23272f;
+      font-weight: bold;
+      border-radius: 22px;
+      border: none;
+      font-size: .96rem;
+      padding: 4px 13px;
+      box-shadow: 0 2px 10px #17f3ff17;
+      transition: background .15s, color .11s, transform .12s;
+      margin-left: 2px;
+    }
+
+    .btn-action:hover,
+    .btn-action:focus {
+      background: linear-gradient(90deg, #ffc107, #17f3ff);
+      color: #181818;
+      transform: scale(1.06);
+    }
+
+    #reset-btn {
+      font-weight: 600;
+      font-size: .93rem;
+      margin-left: 10px;
+    }
+
+    .gamebox {
+      margin: 0 auto 0 auto;
+      background: rgba(17, 24, 39, 0.91);
+      border-radius: 0 0 2.2rem 2.2rem;
+      border: 2px solid var(--accent);
+      border-top: none;
+      max-width: 420px;
+      box-shadow: 0 0 24px #17f3ff2a;
+      padding-bottom: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #game-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      min-height: unset;
+      z-index: 1;
+      border-radius: 1.5rem;
+    }
+
+    canvas {
+      border: 5px solid var(--accent);
+      border-radius: 14px;
+      box-shadow: 0 0 20px var(--accent);
+      background: transparent;
+      max-width: 99vw;
+      height: auto;
+      touch-action: none;
+      background: rgba(0, 0, 0, 0.12);
+      margin-top: 24px;
+      margin-bottom: 16px;
+      display: block;
+      z-index: 1;
+    }
+
+    .nice-effect {
+      position: absolute;
+      left: 50%;
+      top: 62%;
+      transform: translate(-50%, -50%);
+      font-size: 2.4rem;
+      color: #17f3ff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      text-shadow: 0 4px 30px #17f3ff86, 0 2px 18px #fff8;
+      pointer-events: none;
+      opacity: 0;
+      animation: popFade 1.12s forwards;
+      z-index: 10;
+    }
+
+    @keyframes popFade {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.5);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+      }
+
+      60% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -30%) scale(1);
+      }
+    }
+
+    .arcade-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.1rem;
+      margin-top: 9px;
+      font-size: 1.01rem;
+      background: rgba(24, 28, 37, 0.83);
+      border-radius: 11px;
+      padding: 5px 13px;
+      color: #17f3ff;
+      box-shadow: 0 2px 8px #17f3ff10;
+      margin-bottom: -2px;
+      max-width: 420px;
+      margin: 0 auto 20px auto;
+    }
+
+    .arcade-controls i {
+      color: #ffc107;
+    }
+
+    .modal-proarcade {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999 !important;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20, 25, 34, 0.96);
+      transition: background 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-proarcade.show {
+      display: flex;
+    }
+
+    .modal-proarcade .card {
+      max-width: 370px;
+      border: 2.5px solid var(--accent);
+      border-radius: 1.3rem;
+      box-shadow: 0 0 28px #17f3ff38;
+      background: #161a25;
+      color: #fff;
+      font-size: 1.12rem;
+      animation: modalPop 0.22s;
+      z-index: 99999;
+    }
+
+    @keyframes modalPop {
+      0% {
+        transform: scale(0.7);
+      }
+
+      60% {
+        transform: scale(1.08);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .modal-proarcade .btn-danger {
+      background: linear-gradient(90deg, #ff3860, #ffb677);
+      border: none;
+      font-weight: bold;
+      border-radius: 2rem;
+    }
+
+    @media (max-width:600px) {
+
+      .gamebox,
+      .game-top-bar,
+      .arcade-controls {
+        max-width: 99vw;
+      }
+
+      canvas {
+        width: 99vw !important;
+        height: auto !important;
+      }
+
+      .navbar-brand {
+        font-size: 1.25rem;
+      }
+
+      #bg-video,
+      .bg-video-overlay {
+        width: 100vw;
+        height: 100vh;
+      }
+    }
+
+    footer {
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      background: #181d27;
+      border-top: 2px solid var(--accent);
+      text-align: center;
+      padding: 14px 0;
+      font-size: 1.05rem;
+      z-index: 2;
+    }
+
+    footer a:hover {
+      color: #32cd32 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background Video (replace src with your own video) -->
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="data/bg_section.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="bg-video-overlay"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-1" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- TOP GAME BAR: HUD + ACTIONS -->
+  <div class="game-top-bar">
+    <div id="hud">
+      <div id="score">Score: 0</div>
+      <div>Next: <span id="next-bubble"
+          style="display:inline-block;width:22px;height:22px;border-radius:50%;vertical-align:middle;"></span></div>
+    </div>
+    <div class="game-actions">
+      <button class="btn-action" id="howToPlayBtn" title="How to Play"><i class="fas fa-question-circle"></i></button>
+      <button class="btn-action" id="leaderboardLink" title="Leaderboard"><i class="fas fa-trophy"></i></button>
+      <button id="reset-btn" class="btn btn-outline-light ms-2" title="Reset">
+        <i class="fas fa-undo"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- GAME BOX -->
+  <div class="gamebox">
+    <div id="game-container">
+      <canvas id="canvas" width="340" height="390"></canvas>
+      <div class="nice-effect" id="niceEffect" style="display:none"></div>
+    </div>
+  </div>
+  <!-- Controls below the game -->
+  <div class="arcade-controls mt-1">
+    <span><i class="fas fa-mouse-pointer"></i> Drag or Tap to Aim & Shoot</span>
+    <span><i class="fas fa-undo"></i> Reset</span>
+    <span><i class="fas fa-trophy"></i> Leaderboard</span>
+  </div>
+  <!-- How To Play Modal -->
+  <div class="modal-proarcade" id="howToPlayModal" tabindex="-1">
+    <div class="card p-4 mx-auto position-relative">
+      <button class="btn btn-danger position-absolute top-0 end-0 m-2" onclick="hideModal('howToPlayModal')"
+        tabindex="1"><i class="fas fa-times"></i></button>
+      <h4 class="mb-2 text-info"><i class="fas fa-question-circle"></i> How to Play</h4>
+      <ul>
+        <li>Shoot bubbles to form groups of <b>3 or more</b> of the same color to pop them!</li>
+        <li>Disconnected bubbles will drop and vanish (not fall to the bottom).</li>
+        <li>Use mouse or touch to aim, then click/tap to shoot.</li>
+        <li>Game Over: if any bubble reaches the bottom line.</li>
+      </ul>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="py-4 mt-5 border-top">
+    <div class="container text-center text-light">
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Quick Links</h5>
+          <a href="index.html" class="text-decoration-none d-block">Home</a>
+          <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+          <a href="about.html" class="text-decoration-none d-block">About</a>
+          <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Contact</h5>
+          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+          <div>
+            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Arcade Info</h5>
+          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUDIO ELEMENTS FOR SOUNDS -->
+  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+  <audio id="shootSound" src="data/bubbleshoot.mp3"></audio>
+  <audio id="popSound" src="data/bubblepop.mp3"></audio>
+  <audio id="buttonSound" src="data/hover_sound.wav"></audio>
+
+  <!-- SCRIPTS -->
+  <script src="bubble_shooter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // MODAL LOGIC
+    const gameContainer = document.getElementById('game-container');
+    const gamebox = document.querySelector('.gamebox');
+    const gameTopBar = document.querySelector('.game-top-bar');
+    const controls = document.querySelector('.arcade-controls');
+    const footer = document.querySelector('footer');
+    const bgMusic = document.getElementById('bgMusic');
+    const shootSound = document.getElementById('shootSound');
+    const popSound = document.getElementById('popSound');
+    const buttonSound = document.getElementById('buttonSound');
+
+    document.getElementById('howToPlayBtn').onclick = () => {
+      document.getElementById('howToPlayModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      gameTopBar.style.filter = 'blur(6px)';
+      gamebox.style.filter = 'blur(6px)';
+      controls.style.filter = 'blur(6px)';
+      footer.style.filter = 'blur(6px)';
+      bgMusic.volume = 0.06;
+    };
+    function hideModal(id) {
+      document.getElementById(id).classList.remove('show');
+      document.body.style.overflow = '';
+      gameTopBar.style.filter = '';
+      gamebox.style.filter = '';
+      controls.style.filter = '';
+      footer.style.filter = '';
+      bgMusic.volume = 0.15;
+    }
+    window.addEventListener('keydown', e => {
+      if (e.key === "Escape") hideModal('howToPlayModal');
+    });
+    document.getElementById('leaderboardLink').onclick = () => { window.location.href = "leaderboard.html"; }
+    document.getElementById('reset-btn').onclick = () => { init(); };
+
+    // --- SOUNDS LOGIC START ---
+    // Play background music on any user interaction (browser policy)
+    let musicStarted = false;
+    function startMusic() {
+      if (!musicStarted) {
+        bgMusic.volume = 0.15;
+        bgMusic.play().catch(() => { });
+        musicStarted = true;
+      }
+    }
+    document.body.addEventListener('click', startMusic, { once: true });
+    document.body.addEventListener('keydown', startMusic, { once: true });
+
+    // Only hover sound (NO click sound on buttons)
+    document.querySelectorAll('.btn-action, #reset-btn, .modal-proarcade .btn-danger').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        buttonSound.currentTime = 0;
+        buttonSound.play();
+      });
+    });
+
+    // Shoot sound on canvas click (replace with your real shoot logic)
+    document.getElementById('canvas').addEventListener('click', function () {
+      shootSound.currentTime = 0; shootSound.play();
+    });
+    // Pop sound on canvas double-click (replace with your real pop logic)
+    document.getElementById('canvas').addEventListener('dblclick', function () {
+      popSound.currentTime = 0; popSound.play();
+    });
+    // --- SOUNDS LOGIC END ---
+  </script>
+</body>
+
+</html>

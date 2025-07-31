@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dr. Driving - Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(29, 34, 46, 0.87);
+      --card-border: rgba(23, 243, 255, 0.21);
+    }
+    body {
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: #16181e;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position:relative;
+    }
+    #bg-video {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.36) saturate(1.05) blur(1.1px);
+      pointer-events:none;
+    }
+    .bg-video-overlay {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(120deg,rgba(24,27,33,0.24) 0%,rgba(24,27,33,0.29) 100%);
+      z-index: 1;
+      pointer-events:none;
+    }
+    #particles-js { position: fixed; inset: 0; z-index: 2; pointer-events:none;}
+    .content-main { position: relative; z-index:3; }
+    .game-wrap {background:transparent;}
+    .game-card-arcade {
+      background: var(--glass);
+      border: 2.5px solid var(--card-border);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 35px #17f3ff33, 0 2px 9px #0008;
+      padding: 1.3rem 0.8rem 1rem 0.8rem;
+      margin-top: 1.3rem;
+      max-width: 670px;
+      margin-left: auto;
+      margin-right: auto;
+      position:relative;
+      z-index:10;
+      backdrop-filter: blur(8px);
+    }
+    h2.fw-bold {
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 2.1rem;
+      text-shadow:0 4px 20px #17f3ff29;
+    }
+    .driving-canvas {
+      width:100%;max-width:900px;
+      height:300px;
+      display:block;margin:auto;
+      border-radius:1.3rem;
+      border:4px solid var(--primary);
+      background: #1b202e;
+      box-shadow: 0 0 40px #191b29, 0 8px 44px #ffc10717;
+      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+      transition: box-shadow .22s;
+      touch-action: none;
+      user-select: none;
+    }
+    @media (max-width:600px){
+      .driving-canvas{height: 160px; border-radius: 0.8rem;}
+      .game-card-arcade {max-width:99vw; padding:0.8rem 0.3rem;}
+      h2.fw-bold {font-size: 1.25rem;}
+    }
+    .game-controls button{
+      min-width: 108px;
+      font-size: 1rem;
+      font-family:'Orbitron',sans-serif;
+      box-shadow: 0 3px 12px #ffc10736;
+      border-radius:20px;
+      margin-bottom:4px;
+      margin-top:4px;
+      padding: 0.3rem 0.5rem;
+      transition: background 0.17s, color 0.16s, box-shadow .17s;
+      font-weight:bold;
+    }
+    .game-controls .btn-warning { background:linear-gradient(90deg,var(--accent),var(--primary)); border:none; color:#181818;}
+    .game-controls .btn-warning:hover,.game-controls .btn-warning:focus {background:linear-gradient(90deg,var(--neon-pink),var(--accent)); color:#fff;}
+    .game-controls .btn-danger {background:linear-gradient(90deg,#ff3860,#ffb677); border:none;}
+    .game-controls .btn-danger:hover {background:linear-gradient(90deg,#f12fbb,#ff3860); color:#fff;}
+    .game-controls .btn-success {background:linear-gradient(90deg,#49fcb1,#0ef); border:none;}
+    .game-controls .btn-success:hover {background:linear-gradient(90deg,#0ef,#49fcb1); color:#181818;}
+    .score-badges .badge { font-size: 1.01rem; letter-spacing:1px; margin-right: 7px;}
+    .score-badges .bg-success {background:linear-gradient(90deg,#17f3ff,#49fcb1)!important; color:#181818;}
+    .score-badges .bg-info {background:linear-gradient(90deg,#ffc107,#17f3ff)!important; color:#181818;}
+    .controls-row {
+      background:rgba(28,36,55,0.95);
+      padding:0.55rem 0;
+      border-radius:0.7rem;
+      box-shadow:0 3px 10px #17f3ff0c;
+      margin-bottom: 1.2rem;
+      margin-top: 0.45rem;
+    }
+    .arcade-controls span.badge {
+      font-size:1.02rem;
+      background:linear-gradient(90deg,#17f3ff,#ffc107)!important;
+      color:#1b232b;
+      margin-right:4px;
+      margin-bottom: 2px;
+      font-family:'Orbitron',sans-serif;
+    }
+    .howtoplay-modal {
+      display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:#191d2799;z-index:1111;align-items:center;justify-content:center;
+      animation: fadeInModal 0.18s;
+    }
+    .howtoplay-modal.show {display:flex;}
+    @keyframes fadeInModal {from{opacity:0;}to{opacity:1;}}
+    .howtoplay-modal .card{
+      max-width:320px; border:2.5px solid var(--accent);
+      border-radius:1rem; box-shadow:0 0 18px #17f3ff28;
+      background:var(--glass);
+      color:#fff;
+      padding: 1.1rem 1rem;
+    }
+    .howtoplay-modal ul {padding-left:1.1rem;}
+    .howtoplay-modal li {margin-bottom:.6rem;}
+    .howtoplay-modal .btn-danger {
+      background:linear-gradient(90deg,#ff3860,#ffb677);
+      border:none; font-weight:bold; border-radius:2rem;
+    }
+    /* Navbar */
+    .navbar {
+      background: #191d27ea !important;
+      border-bottom: 2px solid var(--accent);
+    }
+    .navbar-brand span {
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 1.22em;
+    }
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.2px;
+      padding: 8px 16px !important;
+      border-radius: 2em;
+      margin: 0 4px;
+      font-weight: 600;
+      transition: background 0.19s, color 0.18s, box-shadow 0.19s;
+    }
+    .navbar-nav .nav-link.active,
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:focus {
+      background: linear-gradient(90deg, var(--accent) 40%, var(--primary) 100%);
+      color: #191e2c !important;
+      box-shadow: 0 0 18px #17f3ff88, 0 2px 8px #ffc10744;
+      text-shadow: 0 1px 12px #fff6;
+      outline: none;
+    }
+    /* Footer */
+    :root {
+  --primary: #ffc107;
+  --accent: #17f3ff;
+  --neon-pink: #f12fbb;
+}
+footer {
+  background: #191e31;
+  border-top: 2.5px solid var(--accent);
+  box-shadow: 0 -3px 18px #17f3ff22, 0 -1px 11px #f12fbb18;
+  color: #e0fdff;
+  padding: 38px 0 20px 0;
+  font-family: 'Orbitron', Arial, sans-serif;
+  letter-spacing: 1.2px;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+footer h5 {
+  color: var(--accent);
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 2.5px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 12px #17f3ff55, 0 2px 7px #f12fbb99;
+}
+.footer-link, .footer-link:visited {
+  color: var(--primary);                     /* Normal: Yellow */
+  text-decoration: none;
+  display: block;
+  font-size: 1.09em;
+  letter-spacing: 1px;
+  margin: 2px 0 2px 0;
+  text-align: center;
+  transition: color .18s, text-shadow .18s;
+}
+.footer-link:hover {
+  color: var(--accent);                      /* Hover: Neon Blue */
+  text-shadow: 0 1px 6px #17f3ff88;
+}
+footer .fa, footer .fab, footer .fas {
+  color: var(--neon-pink);
+  margin: 0 7px;
+  transition: color .17s, text-shadow .17s;
+  text-shadow: 0 0 12px #f12fbb55;
+}
+footer .fa:hover, footer .fab:hover, footer .fas:hover {
+  color: var(--primary);
+  text-shadow: 0 0 16px #ffc10799, 0 1px 7px #17f3ff99;
+}
+footer p {
+  color: #e0fdff !important;
+}
+footer .col-md-4 {
+  margin-bottom: 1rem;
+}
+footer .footer-copy {
+  margin-top: 12px;
+  color: #81ffe2;
+  font-size: 0.98rem;
+  opacity: 0.80;
+  letter-spacing: .5px;
+}
+@media (max-width: 600px) {
+  .footer-link { font-size: 1.12em; }
+  footer .fab, footer .fa, footer .fas { font-size: 1.32em; }
+  footer { padding: 28px 0 14px 0; }
+}
+
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="data/bg_section.mp4" type="video/mp4" />
+  </video>
+  <div class="bg-video-overlay"></div>
+  <div id="particles-js"></div>
+  <div class="content-main">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- MAIN GAME CARD -->
+    <main class="container py-4 game-wrap mt-4">
+      <div class="game-card-arcade">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+          <h2 class="fw-bold mb-0"><i class="fas fa-car text-warning"></i> Dr. Driving</h2>
+          <div>
+            <button class="btn btn-outline-warning" onclick="showHowToPlay()"><i class="fas fa-question-circle"></i> How to Play</button>
+          </div>
+        </div>
+        <canvas id="drivingCanvas" width="900" height="460" class="driving-canvas"></canvas>
+        <div class="mt-3 d-flex flex-wrap gap-3 justify-content-center game-controls">
+          <button class="btn btn-warning fw-bold" id="btnStart"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-danger fw-bold" id="btnPause"><i class="fas fa-pause"></i> Pause</button>
+          <button class="btn btn-success fw-bold" id="btnRestart"><i class="fas fa-undo"></i> Restart</button>
+        </div>
+        <div class="score-badges text-center mt-4">
+          <span class="badge bg-success me-2" id="scoreLabel">Score: 0</span>
+          <span class="badge bg-info" id="highScoreLabel">High Score: 0</span>
+        </div>
+        <div class="controls-row text-center mt-4">
+          <b>Controls:</b>
+          <span class="arcade-controls">
+            <span class="badge"><i class="fas fa-arrow-left"></i>/<i class="fas fa-arrow-right"></i></span> Move Lane
+            <span class="badge"><i class="fas fa-arrow-up"></i></span> Accelerate
+            <span class="badge"><i class="fas fa-arrow-down"></i></span> Brake
+          </span>
+          <span class="d-block d-md-none mt-1"><i class="fas fa-arrows-alt"></i> Swipe on game for mobile controls!</span>
+        </div>
+      </div>
+      <!-- HOW TO PLAY MODAL -->
+      <div id="howToPlayModal" class="howtoplay-modal">
+        <div class="card p-4 mx-auto position-relative">
+          <button class="btn btn-danger position-absolute top-0 end-0 m-2" onclick="hideHowToPlay()" tabindex="1"><i class="fas fa-times"></i></button>
+          <h4 class="mb-2 text-warning"><i class="fas fa-question-circle"></i> How to Play</h4>
+          <ul>
+            <li><b>Desktop:</b> Use <b>Left/Right Arrow</b> keys to change lanes, <b>Up Arrow</b> to accelerate, and <b>Down Arrow</b> to brake.</li>
+            <li><b>Mobile:</b> <b>Swipe left/right</b> to change lanes, <b>Swipe up</b> to accelerate, <b>Swipe down</b> to brake.</li>
+            <li>Avoid all other cars. If you crash, it's game over!</li>
+            <li>Your score increases the longer you survive. Speed increases as you go. Good luck!</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    <!-- FOOTER -->
+    <footer class="py-4 border-top">
+      <div class="container text-center text-light">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Quick Links</h5>
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="leaderboard.html" class="footer-link">Leaderboard</a>
+            <a href="about.html" class="footer-link">About</a>
+            <a href="contact.html" class="footer-link">Contact</a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Contact</h5>
+            <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+            <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+            <div class="footer-social">
+              <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
+              <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Arcade Info</h5>
+            <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- AUDIO EFFECTS -->
+<audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+<audio id="hoverSound" src="data/hover_sound.wav"></audio>
+<audio id="carSwipeSound" src="data/swap.mp3"></audio>
+
+  <script>
+    function showHowToPlay(){ document.getElementById('howToPlayModal').classList.add("show"); }
+    function hideHowToPlay(){ document.getElementById('howToPlayModal').classList.remove("show"); }
+    window.addEventListener('keydown',function(e){
+      if(document.getElementById('howToPlayModal').classList.contains("show") && (e.key==="Escape"||e.key==="Esc")) hideHowToPlay();
+    });
+  </script>
+  <script src="game_driving.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js",{
+      "particles": {
+        "number": { "value": 38, "density": { "enable": true, "value_area": 650 } },
+        "color": { "value": ["#17f3ff", "#ffc107", "#f12fbb"] },
+        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000" } },
+        "opacity": { "value": 0.15, "random": true, "anim": { "enable": false } },
+        "size": { "value": 8, "random": true },
+        "line_linked": { "enable": true, "distance": 120, "color": "#17f3ff44", "opacity": 0.10, "width": 1.4 },
+        "move": { "enable": true, "speed": 2.4, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "repulse" } },
+        "modes": { "repulse": { "distance": 85, "duration": 0.4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+  <script>
+  // Play bg music on first user interaction (mobile + desktop)
+  const bgMusic = document.getElementById('bgMusic');
+  let musicStarted = false;
+  function startBgMusic() {
+    if (!musicStarted) {
+      bgMusic.volume = 0.27;
+      bgMusic.play().catch(()=>{});
+      musicStarted = true;
+    }
+  }
+  ['click', 'keydown', 'touchstart'].forEach(ev => {
+    window.addEventListener(ev, startBgMusic, { once: true });
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) bgMusic.pause();
+    else if (musicStarted) bgMusic.play().catch(()=>{});
+  });
+
+  // Hover sound for all game buttons & nav links
+  const hoverSound = document.getElementById('hoverSound');
+  document.querySelectorAll('.btn, .nav-link').forEach(btn => {
+    btn.addEventListener('mouseenter', function () {
+      hoverSound.currentTime = 0;
+      hoverSound.play();
+    });
+  });
+
+  // CAR SWIPE SOUND (arrow keys + swipe gesture)
+  const carSwipeSound = document.getElementById('carSwipeSound');
+  // For keyboard (left/right/up/down)
+  window.addEventListener('keydown', function(e){
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+      carSwipeSound.currentTime = 0;
+      carSwipeSound.play();
+    }
+  });
+  // For mobile swipe
+  let startX = null, startY = null;
+  const canvas = document.getElementById('drivingCanvas');
+  canvas.addEventListener('touchstart', function(e){
+    let t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+  }, { passive: true });
+  canvas.addEventListener('touchend', function(e){
+    if (startX === null || startY === null) return;
+    let t = e.changedTouches[0];
+    let dx = t.clientX - startX, dy = t.clientY - startY;
+    if (Math.abs(dx) > 30 || Math.abs(dy) > 30) {
+      carSwipeSound.currentTime = 0;
+      carSwipeSound.play();
+    }
+    startX = null; startY = null;
+  }, { passive: true });
+</script>
+
+</body>
+</html>

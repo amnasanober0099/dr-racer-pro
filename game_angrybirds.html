@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Angry Birds - Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(29, 34, 46, 0.87);
+      --card-border: rgba(23, 243, 255, 0.21);
+    }
+
+    body {
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: #12161d;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      min-width: 100vw;
+      min-height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+      background: #12161d;
+      pointer-events: none;
+    }
+
+    .bg-video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(18, 22, 29, 0.82);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    body>*:not(#bg-video):not(.bg-video-overlay) {
+      position: relative;
+      z-index: 2;
+    }
+
+    .game-wrap {
+      background: transparent;
+    }
+
+    .game-card-arcade {
+      background: var(--glass);
+      border: 2.5px solid var(--card-border);
+      border-radius: 2.2rem;
+      box-shadow: 0 8px 35px #ff1f1f29, 0 2px 9px #0008;
+      padding: 1.5rem 0.4rem 1.1rem 0.4rem;
+      margin: 1.1rem auto 1.1rem;
+      max-width: 700px;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(8px);
+      min-height: 570px;
+      overflow: visible;
+    }
+
+    h2.fw-bold {
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      color: var(--primary);
+      letter-spacing: 2px;
+      font-size: 2.1rem;
+      text-shadow: 0 4px 20px #f12fbb29;
+    }
+
+    .ab-canvas {
+      width: 100%;
+      max-width: 620px;
+      height: 320px;
+      display: block;
+      margin: auto;
+      border-radius: 1.5rem;
+      border: 4px solid var(--primary);
+      background: #1b202e;
+      box-shadow: 0 0 30px #191b29, 0 8px 34px #f12fbb0f;
+      margin-bottom: 1rem;
+      margin-top: 0.7rem;
+      transition: box-shadow .22s;
+      aspect-ratio: 31/16;
+    }
+
+    .ab-style-msg {
+      position: absolute;
+      left: 50%;
+      top: 38%;
+      transform: translate(-50%, -50%);
+      min-width: 140px;
+      background: linear-gradient(90deg, #ffd400, #f12fbb 80%);
+      color: #12161d;
+      font-family: 'Orbitron', 'Russo One', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      text-shadow: 0 0 15px #fff3, 0 0 30px #f12fbb88;
+      padding: 0.22em 1.2em;
+      border-radius: 1.5em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .33s, transform .32s cubic-bezier(.47, 1.64, .41, .8);
+      z-index: 20;
+      box-shadow: 0 0 24px #ffd40044;
+    }
+
+    .ab-style-msg.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.16) rotate(-3deg);
+    }
+
+    .game-controls button {
+      min-width: 120px;
+      font-size: 1.07rem;
+      font-family: 'Orbitron', sans-serif;
+      box-shadow: 0 3px 12px #f12fbb36;
+      border-radius: 20px;
+      margin-bottom: 7px;
+      margin-top: 7px;
+      transition: background 0.17s, color 0.16s, box-shadow .17s;
+      font-weight: bold;
+    }
+
+    .game-controls .btn-success {
+      background: linear-gradient(90deg, #ffc107, #d61c22);
+      border: none;
+      color: #181818;
+    }
+
+    .game-controls .btn-success:hover,
+    .game-controls .btn-success:focus {
+      background: linear-gradient(90deg, #f12fbb, #ffc107);
+      color: #fff;
+    }
+
+    .game-controls .btn-warning {
+      background: linear-gradient(90deg, #49fcb1, #0ef);
+      border: none;
+    }
+
+    .game-controls .btn-warning:hover {
+      background: linear-gradient(90deg, #0ef, #49fcb1);
+      color: #181818;
+    }
+
+    .score-badges .badge {
+      font-size: 1.13rem;
+      letter-spacing: 1px;
+      margin-right: 7px;
+    }
+
+    .score-badges .bg-danger {
+      background: linear-gradient(90deg, #ff2424, #ffc107) !important;
+      color: #fff;
+    }
+
+    .score-badges .bg-info {
+      background: linear-gradient(90deg, #ffc107, #17f3ff) !important;
+      color: #181818;
+    }
+
+    .controls-row {
+      background: rgba(28, 36, 55, 0.95);
+      padding: 1rem 0;
+      border-radius: 1rem;
+      box-shadow: 0 3px 18px #17f3ff1a;
+      margin-bottom: 2rem;
+      margin-top: 0.6rem;
+    }
+
+    .arcade-controls span.badge {
+      font-size: 1.06rem;
+      background: linear-gradient(90deg, #17f3ff, #d61c22) !important;
+      color: #1b232b;
+      margin-right: 6px;
+      margin-bottom: 3px;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .howtoplay-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #191d2799;
+      z-index: 1111;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInModal 0.18s;
+    }
+
+    .howtoplay-modal.show {
+      display: flex;
+    }
+
+    @keyframes fadeInModal {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .howtoplay-modal .card {
+      max-width: 360px;
+      border: 2.5px solid var(--primary);
+      border-radius: 1.3rem;
+      box-shadow: 0 0 28px #f12fbb28;
+      background: var(--glass);
+      color: #fff;
+    }
+
+    .howtoplay-modal ul {
+      padding-left: 1.1rem;
+    }
+
+    .howtoplay-modal li {
+      margin-bottom: .8rem;
+    }
+
+    .howtoplay-modal .btn-danger {
+      background: linear-gradient(90deg, #ff3860, #ffb677);
+      border: none;
+      font-weight: bold;
+      border-radius: 2rem;
+    }
+
+    .ab-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2000;
+      background: rgba(24, 10, 10, .73);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ab-overlay.show {
+      display: flex;
+    }
+
+    .ab-overlay .card {
+      background: #222;
+      color: #fff;
+      border: 3px solid #d61c22;
+    }
+
+    .level-anim {
+      animation: pop 0.6s cubic-bezier(.31, 1.81, .63, 1.09) 1;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0.7);
+      }
+
+      90% {
+        transform: scale(1.16);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .game-controls .btn:hover,
+    .game-controls .btn:focus {
+      transform: scale(1.05);
+    }
+
+    @media (max-width:800px) {
+      .game-card-arcade {
+        max-width: 98vw;
+        padding-left: 3vw;
+        padding-right: 3vw;
+      }
+
+      .ab-canvas {
+        max-width: 96vw;
+      }
+    }
+
+    @media (max-width:600px) {
+      .game-card-arcade {
+        padding: 0.5rem 0.2rem 1rem 0.2rem;
+      }
+
+      .ab-canvas {
+        height: 175px;
+        border-radius: 0.7rem;
+      }
+
+      .ab-style-msg {
+        font-size: 1.28rem;
+        border-radius: 1em;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #232b3a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #17f3ff26;
+      border-radius: 7px;
+    }
+    .ab-canvas { touch-action: none; }
+
+  </style>
+</head>
+
+<body class="bg-dark text-light">
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="data/bg_section.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay"></div>
+  <div class="content-main">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i>
+                Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="container py-4 game-wrap">
+      <div class="game-card-arcade position-relative">
+        <div class="ab-style-msg" id="abStyleMsg"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+          <h2 class="fw-bold mb-0"><i class="fas fa-crow text-danger"></i> Angry Birds</h2>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="leaderboard.html" class="btn btn-outline-warning"><i class="fas fa-trophy"></i> Leaderboard</a>
+            <a href="#" id="howToPlayBtn" class="btn btn-outline-danger"><i class="fas fa-question-circle"></i> How to
+              Play</a>
+          </div>
+        </div>
+        <canvas id="abCanvas" width="620" height="320" class="ab-canvas"></canvas>
+        <div class="mt-3 d-flex flex-wrap gap-3 justify-content-center game-controls">
+          <button class="btn btn-success fw-bold" id="btnStart"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-warning fw-bold" id="btnRestart"><i class="fas fa-undo"></i> Restart</button>
+        </div>
+        <div class="score-badges text-center mt-3">
+          <span class="badge bg-danger me-2" id="scoreLabel">Score: 0</span>
+          <span class="badge bg-info level-anim" id="levelLabel">Level: 1</span>
+        </div>
+        <div class="controls-row text-center mt-3">
+          <b>Controls:</b>
+          <span class="arcade-controls">
+            <span class="badge"><i class="fas fa-mouse-pointer"></i></span> Drag & Release to Shoot Bird
+          </span>
+        </div>
+      </div>
+    </main>
+    <div id="howtoplayModal" class="howtoplay-modal">
+      <div class="card p-4 mx-auto position-relative">
+        <button class="btn btn-danger position-absolute top-0 end-0 m-2" onclick="hideHowToPlay()" tabindex="1"><i
+            class="fas fa-times"></i></button>
+        <h4 class="mb-2 text-danger"><i class="fas fa-question-circle"></i> How to Play</h4>
+        <ul>
+          <li>Drag the bird with your mouse (or finger)</li>
+          <li>Release to shoot!</li>
+          <li>Hit all pigs to win the level</li>
+          <li>Restart to try again, or go next level!</li>
+        </ul>
+      </div>
+    </div>
+    <div id="abOverlay" class="ab-overlay">
+      <div class="card p-4 text-center">
+        <h3 id="overlayTitle"></h3>
+        <div class="mb-2 fs-5" id="overlayScore"></div>
+        <button class="btn btn-success mx-2" id="btnNextLevel" style="display:none;">Next Level</button>
+        <button class="btn btn-warning mx-2" id="btnRetry" style="display:none;">Retry</button>
+      </div>
+    </div>
+    <footer class="py-4 mt-5 border-top">
+      <div class="container text-center text-light">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Quick Links</h5>
+            <a href="index.html" class="text-decoration-none d-block">Home</a>
+            <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+            <a href="about.html" class="text-decoration-none d-block">About</a>
+            <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Contact</h5>
+            <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+            <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+            <div>
+              <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+              <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Arcade Info</h5>
+            <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- AUDIO ELEMENTS FOR SOUND EFFECTS -->
+  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav"></audio>
+  <audio id="shootSound" src="data/launch.mp3"></audio>
+  <audio id="blockBreakSound" src="data/break.mp3"></audio>
+  <audio id="pigHitSound" src="data/pighit.mp3"></audio>
+  <audio id="failSound" src="data/fail.mp3"></audio>
+  <audio id="winSound" src="data/win.mp3"></audio>
+  <script src="game_angrybirds.js"></script>
+  <script>
+    // Modal open/close logic
+    const modal = document.getElementById('howtoplayModal');
+    document.getElementById('howToPlayBtn').onclick = function (e) {
+      e.preventDefault(); modal.classList.add('show');
+      setTimeout(() => { document.querySelector('#howtoplayModal button').focus(); }, 150);
+    }
+    function hideHowToPlay() { modal.classList.remove('show'); }
+    window.addEventListener('keydown', function (e) {
+      if (modal.classList.contains('show') && (e.key === "Escape" || e.key === "Esc")) hideHowToPlay();
+    });
+    // Arcade hover sound for all buttons/links
+    const hoverSound = document.getElementById('hoverSound');
+    document.querySelectorAll('button, .btn, .nav-link').forEach(btn => {
+      btn.addEventListener('mouseenter', () => { hoverSound.currentTime = 0; hoverSound.play(); });
+    });
+    // BG music auto-start
+    const bgMusic = document.getElementById('bgMusic');
+    let musicStarted = false;
+    function startMusic() {
+      if (!musicStarted) {
+        bgMusic.volume = 0.13;
+        bgMusic.play().catch(() => { });
+        musicStarted = true;
+      }
+    }
+    document.body.addEventListener('click', startMusic, { once: true });
+    document.body.addEventListener('keydown', startMusic, { once: true });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

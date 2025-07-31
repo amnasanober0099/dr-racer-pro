@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pro Arcade – Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --glass: rgba(29, 34, 46, 0.92);
+      --card-border: rgba(23, 243, 255, 0.23);
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+      --neon-pink: #f12fbb;
+    }
+    html, body { height: 100%; min-height: 100%; }
+    body {
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: linear-gradient(120deg, #191b29 0%, #222b38 100%);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    #particles-js {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .content-main {
+      position: relative;
+      z-index: 2;
+      flex: 1 0 auto;
+      width: 100%;
+    }
+    .navbar {
+      background: #181b27ea !important;
+      border-bottom: 3px solid var(--accent);
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      font-size: 1.11rem;
+      border-radius: 0 0 26px 26px;
+      z-index: 100;
+      box-shadow: 0 4px 28px #17f3ff26;
+    }
+    .navbar-brand {
+      font-size: 2rem;
+      color: var(--primary);
+      letter-spacing: 2px;
+      text-shadow: 0 0 25px #ffc107a0, 0 2px 14px #17f3ff;
+    }
+    .navbar-brand span { color: var(--accent); }
+    .navbar .navbar-nav .nav-link { color: #f7fafb !important; font-size: 1.08rem;}
+    .navbar .navbar-nav .nav-link.active,
+    .navbar .navbar-nav .nav-link:focus { background: linear-gradient(90deg, #f12fbb 35%, var(--accent) 90%); color: #fff !important;}
+    .navbar .navbar-nav .nav-link:hover { background: linear-gradient(90deg, var(--primary) 50%, var(--accent) 120%); color: #1e2024 !important;}
+    .navbar-toggler { border-radius: 14px; border: 2px solid var(--accent); background: #202637; color: var(--accent); }
+    .navbar-toggler:focus { box-shadow: 0 0 0 2px #17f3ff; border-color: #f12fbb;}
+    .leaderboard-title {
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 18px;
+      font-size: 2.75rem;
+      text-shadow: 0 2px 24px #17f3ffdd, 0 0 42px #17f3ff88;
+      animation: neon-glow 2.5s infinite alternate;
+    }
+    @keyframes neon-glow {
+      from { text-shadow: 0 0 18px #17f3ff, 0 0 12px #f12fbb80; }
+      to   { text-shadow: 0 0 40px #17f3ffcc, 0 0 60px #f12fbb88; }
+    }
+    .row.equal-card-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .game-leaderboard-col {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin-bottom: 1.6rem;
+    }
+    .game-leaderboard-card {
+      background: var(--glass);
+      border: 2.8px solid var(--card-border);
+      border-radius: 26px;
+      box-shadow: 0 8px 32px #17f3ff38, 0 0 18px #f12fbb22;
+      padding: 1.35rem 1.3rem 1.7rem 1.3rem;
+      transition: box-shadow .22s, border .19s, transform .19s;
+      backdrop-filter: blur(6px);
+      flex: 1 1 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+      min-height: 370px;
+      cursor: pointer;
+    }
+    .game-leaderboard-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 14px 42px #17f3ff73, 0 0 24px #f12fbb55;
+      transform: scale(1.025) translateY(-7px);
+    }
+    .game-title {
+      font-size: 1.38rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.7px;
+      text-shadow: 0 2px 16px #17f3ff80, 0 0 18px #ffc10722;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .leaderboard-table {
+      width: 100%; color: #e9fdff; background: transparent;
+      border-collapse: separate; border-spacing: 0 8px;
+      margin-top: auto;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+      background: #20263b65;
+      border: none;
+      text-align: center;
+      padding: 0.68rem 0.5rem;
+      border-radius: 18px;
+      font-size: 1.09rem;
+      font-family: 'Orbitron', Arial, sans-serif;
+      transition: background .12s;
+    }
+    .leaderboard-table th { color: var(--primary);}
+    .medal { font-size: 1.3rem; font-weight: bold; letter-spacing:1.1px; position:relative; }
+    .gold    { color: var(--gold);   text-shadow: 0 2px 14px #ffd700cc, 0 0 22px #ffd70077; animation: popmedal 1.6s infinite; }
+    .silver  { color: var(--silver); text-shadow: 0 2px 12px #c0c0c0cc, 0 0 18px #c0c0c077; animation: popmedal 2.0s infinite; }
+    .bronze  { color: var(--bronze); text-shadow: 0 2px 9px #cd7f32cc, 0 0 13px #cd7f3277; animation: popmedal 1.7s infinite; }
+    @keyframes popmedal {
+      0%, 100% { transform: scale(1); filter: brightness(1);}
+      45% { transform: scale(1.18) rotate(-8deg); filter: brightness(1.18);}
+      65% { transform: scale(0.93) rotate(6deg);}
+    }
+    .fa-user-circle { color: var(--neon-pink); text-shadow: 0 2px 11px #f12fbb60;}
+    .leaderboard-table tbody tr {
+      transition: background .16s, transform .15s;
+      cursor: pointer;
+    }
+    .leaderboard-table tbody tr:hover {
+      background: #17f3ff18 !important;
+      transform: scale(1.03);
+      box-shadow: 0 2px 12px #17f3ff55;
+    }
+    @media (min-width: 1200px) {
+      .game-leaderboard-col { flex: 0 0 33.333%; max-width: 33.333%; }
+    }
+    @media (min-width: 768px) and (max-width:1199px) {
+      .game-leaderboard-col { flex: 0 0 50%; max-width: 50%; }
+    }
+    @media (max-width: 767px) {
+      .game-leaderboard-col { flex: 0 0 100%; max-width: 100%; }
+      .leaderboard-title { font-size: 1.5rem; }
+      .game-leaderboard-card { padding: 0.8rem 0.2rem 1rem 0.2rem; min-height: 270px;}
+    }
+    footer {
+      background: #20263b;
+      color: #fff;
+      border-top: 3px solid var(--accent);
+      border-radius: 28px 28px 0 0;
+      margin-top: 3rem;
+      box-shadow: 0 -4px 22px #17f3ff15;
+      font-family: 'Orbitron',sans-serif;
+      flex-shrink: 0;
+      z-index: 3;
+    }
+    footer h5 { color: var(--primary);}
+    footer a { color: var(--accent);}
+    footer a:hover { color: var(--primary);}
+    ::selection {background: #17f3ff42;}
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="content-main">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <h1 class="leaderboard-title">🏆 Game Leaderboard</h1>
+    <div class="container">
+      <div class="row equal-card-row d-flex flex-wrap justify-content-center">
+        <!-- === ALL 12 CARDS BELOW === -->
+        <!-- 1. Dr. Driving -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-car"></i> Dr. Driving</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Sara</td><td>16,200</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Ali</td><td>14,000</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Zain</td><td>13,200</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 2. Hill Climb -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-mountain"></i> Hill Climb</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Bilal</td><td>15,800</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Sana</td><td>14,750</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Saad</td><td>13,600</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 3. Dino Run -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-kiwi-bird"></i> Dino Run</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Asim</td><td>19,150</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Maham</td><td>17,800</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Umar</td><td>16,400</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 4. Angry Birds -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-dove"></i> Angry Birds</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Zahra</td><td>17,000</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Qasim</td><td>15,800</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Hira</td><td>14,500</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 5. Plane Shooter -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-fighter-jet"></i> Plane Shooter</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Waleed</td><td>18,900</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Fatima</td><td>17,400</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Sufyan</td><td>16,800</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 6. Fruit Crush -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-lemon"></i> Fruit Crush</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Hania</td><td>13,850</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Salman</td><td>13,000</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Maryam</td><td>12,900</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 7. Fruit Ninja -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-apple-alt"></i> Fruit Ninja</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Imran</td><td>20,700</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Saira</td><td>19,200</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Salman</td><td>18,900</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 8. Tic Tac Toe -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-times-circle"></i> Tic Tac Toe</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Daniyal</td><td>14,500</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Aiman</td><td>14,200</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Urooj</td><td>13,800</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 9. Bubble Shooter -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-circle"></i> Bubble Shooter</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Hassan</td><td>18,300</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Rimsha</td><td>16,950</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Zeeshan</td><td>16,400</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 10. Neon Snake -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-grip-lines"></i> Neon Snake</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Areeba</td><td>17,600</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Jawad</td><td>17,500</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Farhan</td><td>16,900</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 11. Water Sort -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-tint"></i> Water Sort</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Zara</td><td>12,700</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Khizar</td><td>12,200</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Misha</td><td>12,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 12. Runner Dash -->
+        <div class="col-md-6 col-lg-4 game-leaderboard-col">
+          <div class="game-leaderboard-card">
+            <div class="game-title"><i class="fas fa-running"></i> Runner Dash</div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr><th>Medal</th><th>Player</th><th>Score</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="medal gold">🥇 Gold</td><td><i class="fa fa-user-circle"></i> Aliya</td><td>16,900</td></tr>
+                <tr><td class="medal silver">🥈 Silver</td><td><i class="fa fa-user-circle"></i> Faisal</td><td>15,900</td></tr>
+                <tr><td class="medal bronze">🥉 Bronze</td><td><i class="fa fa-user-circle"></i> Shahid</td><td>15,100</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- ========== END ALL CARDS ========== -->
+      </div>
+    </div>
+  </div>
+  <footer class="py-4 border-top">
+    <div class="container text-center text-light">
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Quick Links</h5>
+          <a href="index.html" class="text-decoration-none d-block">Home</a>
+          <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+          <a href="about.html" class="text-decoration-none d-block">About</a>
+          <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Contact</h5>
+          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+          <div>
+            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Arcade Info</h5>
+          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sound Effects -->
+  <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav" preload="auto"></audio>
+  <audio id="clickSound" src="data/single-mouse-click-sound-hd-379373.mp3" preload="auto"></audio>
+
+  <!-- Bootstrap & tsParticles -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js"></script>
+  <script>
+    // Network style background with connecting lines!
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      particles: {
+        number: { value: 60 },
+        color: { value: ["#17f3ff", "#ffc107", "#f12fbb"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.27 },
+        size: { value: 6, random: true },
+        move: { enable: true, speed: 1.10 },
+        links: {
+          enable: true,
+          color: "#17f3ff",
+          distance: 140,
+          opacity: 0.40,
+          width: 1.7
+        }
+      },
+      background: { color: "transparent" }
+    });
+
+    // Sound + Interaction
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgSound = document.getElementById('bgSound');
+      const clickSound = document.getElementById("clickSound");
+      const hoverSound = document.getElementById("hoverSound");
+
+      // Set volumes
+      bgSound.volume = 0.36;
+      clickSound.volume = 1;
+      hoverSound.volume = 1;
+
+      // Autoplay fix: play after user interaction (required by Chrome, Edge etc)
+      let played = false;
+      function tryPlayBg() {
+        if (!played) {
+          bgSound.play().catch(()=>{});
+          played = true;
+        }
+      }
+      window.addEventListener('click', tryPlayBg, { once: true });
+      window.addEventListener('keydown', tryPlayBg, { once: true });
+      window.addEventListener('touchstart', tryPlayBg, { once: true });
+
+      // Navbar/links/cards/rows sound
+      document.querySelectorAll('.nav-link').forEach(el => {
+        el.addEventListener('mouseenter', () => {hoverSound.currentTime=0;hoverSound.play();});
+        el.addEventListener('click', () => {clickSound.currentTime=0;clickSound.play();});
+      });
+      document.querySelectorAll('footer a').forEach(el => {
+        el.addEventListener('mouseenter', () => {hoverSound.currentTime=0;hoverSound.play();});
+        el.addEventListener('click', () => {clickSound.currentTime=0;clickSound.play();});
+      });
+      document.querySelectorAll('.game-leaderboard-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {hoverSound.currentTime=0;hoverSound.play();});
+        card.addEventListener('click', () => {clickSound.currentTime=0;clickSound.play();});
+      });
+      document.querySelectorAll('.leaderboard-table tbody tr').forEach(row => {
+        row.addEventListener('mouseenter', () => {hoverSound.currentTime=0;hoverSound.play();});
+        row.addEventListener('click', () => {clickSound.currentTime=0;clickSound.play();});
+      });
+    });
+  </script>
+</body>
+</html>

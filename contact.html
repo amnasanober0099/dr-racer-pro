@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact | Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(22,28,46,0.97);
+      --card-3d: 0 10px 38px #17f3ff29, 0 2px 8px #0008, 0 0 0 7px #f12fbb12;
+    }
+    html,body{height:100%;}
+    body {
+      min-height: 100vh;
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: radial-gradient(ellipse at 50% 20%, #1c222e 60%, #222a38 100%);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body:before {
+      content:'';
+      pointer-events:none;
+      position:fixed; inset:0; z-index:2;
+      border: 5px solid transparent;
+      border-radius: 36px;
+      box-shadow: 0 0 34px 6px #17f3ff99, 0 0 44px 18px #f12fbb33;
+      animation: borderGlow 3.5s alternate infinite;
+      opacity:0.9;
+    }
+    @keyframes borderGlow {
+      0% { box-shadow: 0 0 24px 6px #17f3ff88, 0 0 30px 8px #f12fbb33; }
+      100% { box-shadow: 0 0 60px 16px #17f3ffbb, 0 0 88px 30px #f12fbb66; }
+    }
+    .arcade-rays {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 30% 10%, #17f3ff38 0%, #0000 60%),
+        radial-gradient(ellipse at 70% 30%, #f12fbb35 0%, #0000 70%),
+        radial-gradient(ellipse at 60% 85%, #ffc10721 0%, #0000 70%);
+      filter: blur(2px) saturate(1.1);
+      opacity: 0.86;
+    }
+    .neon-grid-bg {
+      position:fixed; z-index:1; inset:0; pointer-events:none; opacity:0.11;
+      background: repeating-linear-gradient(90deg, #17f3ff 0px, #17f3ff 2px, transparent 2px, transparent 60px), 
+                  repeating-linear-gradient(0deg, #17f3ff 0px, #17f3ff 2px, transparent 2px, transparent 60px);
+      animation: gridmove 9s linear infinite alternate;
+    }
+    @keyframes gridmove { to{ background-position: 60px 60px,60px 60px; } }
+    #particles-js { position:fixed; inset:0; z-index:0; pointer-events:none;}
+    #main-content { position:relative; z-index:4; min-height:100vh; }
+
+    .navbar {
+      background: #191d27f8 !important;
+      border-bottom: 3px solid var(--accent);
+      border-radius: 0 0 22px 22px;
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      font-size: 1.12rem;
+      box-shadow: 0 4px 28px #17f3ff18;
+      z-index:10;
+      position:relative;
+    }
+    .navbar-brand {
+      font-size: 2rem; color: var(--primary);
+      letter-spacing: 2px; text-shadow: 0 0 16px #ffc107a7;
+    }
+    .navbar-brand span { color: var(--accent);}
+    .navbar .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      border-radius: 2em;
+      margin: 0 4px;
+      padding: 8px 16px !important;
+      transition: background 0.19s, color 0.18s, box-shadow 0.19s;
+    }
+    .navbar .nav-link.active, .navbar .nav-link:hover, .navbar .nav-link:focus {
+      background: linear-gradient(90deg, var(--accent) 40%, var(--primary) 100%);
+      color: #191e2c !important;
+      box-shadow: 0 0 18px #17f3ff88, 0 2px 8px #ffc10744;
+      text-shadow: 0 1px 12px #fff6;
+      outline: none;
+    }
+    .contact-hero {
+      background: linear-gradient(90deg, #181c29f7 70%, #232b3899 100%);
+      text-align: center;
+      padding: 72px 0 35px 0;
+      margin-bottom: 0;
+      border-radius: 0 0 38px 38px;
+      animation: hero-glow 3.2s infinite alternate;
+      position: relative;
+      overflow:hidden;
+      z-index: 3;
+    }
+    .contact-hero:after {
+      content: '';
+      position: absolute;
+      left: 49%;
+      bottom: -9px;
+      width: 110px; height: 8px;
+      background: linear-gradient(90deg, #17f3ff 30%, #f12fbb 80%);
+      border-radius: 9px;
+      box-shadow: 0 2px 16px #17f3ff77;
+      transform: translateX(-50%);
+      animation: badge-pulse 1.5s alternate infinite;
+      opacity:.86;
+    }
+    @keyframes hero-glow {
+      from { box-shadow: 0 8px 28px #17f3ff30; }
+      to   { box-shadow: 0 18px 44px #f12fbb44, 0 12px 42px #17f3ff35; }
+    }
+    .contact-hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.9rem;
+      color: var(--accent);
+      margin-bottom: 13px;
+      text-shadow: 0 2px 22px #17f3ff77, 0 1px 0 #fff1;
+      letter-spacing: 2.7px;
+      animation: neon-glow 2.7s infinite alternate;
+    }
+    @keyframes neon-glow {
+      from { text-shadow: 0 0 18px #17f3ff, 0 0 12px #f12fbb80; }
+      to   { text-shadow: 0 0 54px #17f3ffcc, 0 0 34px #f12fbbaa; }
+    }
+    .contact-hero p {
+      font-size: 1.17rem;
+      max-width: 690px;
+      margin: 0 auto 18px auto;
+      color: #ffeab5;
+      text-shadow: 0 2px 16px #000a;
+    }
+    .badge-tag {
+      background: linear-gradient(90deg, #17f3ffbb 60%, #f12fbb 100%);
+      color: #fff; font-size: 1.15rem; border-radius: 18px;
+      padding: 7px 32px; margin: 0 8px 19px 8px;
+      letter-spacing: 1.5px; font-family: 'Orbitron', Arial, sans-serif;
+      box-shadow: 0 1px 13px #17f3ff45;
+      display: inline-block;
+      text-shadow: 0 2px 14px #181e2830;
+      animation: badge-pulse 1.4s infinite alternate;
+      font-weight:700;
+    }
+    @keyframes badge-pulse {
+      from { box-shadow: 0 0 15px #17f3ff80;}
+      to { box-shadow: 0 0 32px #17f3ffcc, 0 0 20px #f12fbb99;}
+    }
+    .contact-info-box .fa-info-circle {
+      color: var(--accent);
+      text-shadow: 0 0 16px #17f3ffcc, 0 0 40px #f12fbb55;
+      font-size: 2.2em;
+      margin-right: 8px;
+      animation: neon-glow 2.2s infinite alternate;
+    }
+    .row-contact {
+      margin-top: 54px; margin-bottom: 32px;
+      display: flex; gap: 42px; flex-wrap: wrap;
+      justify-content: center; align-items: stretch;
+      perspective: 1200px;
+      z-index:3; position:relative;
+    }
+    .contact-info-box, .contact-map-card {
+      flex: 1 1 340px;
+      background: var(--glass);
+      border-radius: 32px;
+      box-shadow: var(--card-3d), 0 0 0 0 #fff0;
+      min-width: 320px; margin-bottom: 20px;
+      display: flex; flex-direction: column; justify-content: center;
+      border: 2.5px solid #17f3ff23;
+      transition: box-shadow .18s, transform .22s, border-color .13s;
+      opacity:0; transform: translateY(70px) scale(.98);
+      animation: fade-in-up2 1.14s cubic-bezier(.25,1.14,.55,1.12) forwards;
+      will-change: transform;
+      cursor:pointer;
+      overflow:visible;
+      position:relative;
+      z-index:3;
+    }
+    .contact-info-box.tilted, .contact-map-card.tilted {
+      box-shadow: 0 18px 80px #17f3ff7c, 0 4px 44px #f12fbb44, 0 0 34px 7px #ffc10744;
+      border-color: var(--primary);
+    }
+    .contact-info-box:before, .contact-map-card:before {
+      content:'';
+      pointer-events:none;
+      display:block;
+      position:absolute; inset:0;
+      border-radius:inherit;
+      box-shadow: 0 0 48px 8px #f12fbb22, 0 0 32px 6px #17f3ff30;
+      opacity:0;
+      transition:.18s;
+      z-index:0;
+    }
+    .contact-info-box.tilted:before, .contact-map-card.tilted:before {
+      opacity:1;
+      animation: spark 0.6s cubic-bezier(.2,2.3,.6,.7);
+    }
+    @keyframes spark {
+      0% {opacity:0;}
+      60%{opacity:1;}
+      100%{opacity:0.3;}
+    }
+    .row-contact .contact-info-box{animation-delay:.13s;}
+    .row-contact .contact-map-card{animation-delay:.29s;}
+    @keyframes fade-in-up2 {
+      0% { opacity: 0; transform: translateY(70px) scale(.98);}
+      60%{ opacity:.85;}
+      100%{ opacity: 1; transform: translateY(0) scale(1);}
+    }
+    .contact-info-box {
+      padding: 2.4rem 2.3rem 2rem 2.3rem;
+      align-items: flex-start; justify-content: flex-start;
+      flex-basis: 370px; flex-shrink: 1;
+      will-change: transform;
+      position:relative;
+      z-index:4;
+    }
+    .contact-info-box h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      letter-spacing: 1.2px;
+      font-size: 1.44rem;
+      text-shadow: 0 2px 15px #ffc10798;
+      display: flex; align-items:center;
+    }
+    .contact-details li {
+      margin-bottom: 17px;
+      font-size: 1.18rem;
+      color: #e7faff;
+      list-style: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .contact-details i {
+      color: var(--accent);
+      font-size: 1.25rem;
+      margin-right: 10px;
+      text-shadow: 0 2px 12px #17f3ff55;
+      background: #202637;
+      border-radius: 50%;
+      padding: 7px 8px 5px 8px;
+      margin-bottom: 2px;
+      box-shadow: 0 2px 8px #17f3ff25;
+      transition: box-shadow .15s;
+    }
+    .contact-details .label {
+      color: #ffc107;
+      min-width: 84px;
+      display: inline-block;
+      letter-spacing: .8px;
+    }
+    .contact-social {
+      margin-top: 15px;
+      margin-left: 2px;
+      z-index:3;
+    }
+    .contact-social a {
+      color: #17f3ff;
+      font-size: 1.45rem;
+      margin: 0 12px;
+      transition: color 0.2s, text-shadow .18s;
+      text-shadow: 0 2px 10px #17f3ff44;
+    }
+    .contact-social a:hover { color: #ffc107; text-shadow: 0 2px 13px #ffc10799;}
+    .contact-map-card {
+      padding: 2.4rem 2.3rem 2rem 2.3rem;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 370px; flex-basis: 430px;
+      will-change: transform;
+      position:relative;
+      z-index:3;
+    }
+    .contact-map {
+      width: 100%; height: 320px;
+      border-radius: 20px;
+      box-shadow: 0 2px 22px #181e2865;
+      border: 2px solid #17f3ff55;
+      overflow: hidden;
+      margin-bottom: 0;
+      filter: brightness(0.95) saturate(1.14);
+    }
+    @media (max-width: 992px) {
+      .row-contact { flex-direction: column; gap: 22px; }
+      .contact-info-box, .contact-map-card { min-width: 0; }
+      .contact-map { height: 220px;}
+    }
+    @media (max-width:600px) {
+      .contact-map {height: 140px;}
+      .contact-info-box, .contact-map-card {padding: 1.1rem .7rem;}
+      .contact-hero {padding: 38px 0 15px 0;}
+      .contact-hero h1 { font-size: 2rem;}
+    }
+    .contact-form-section {
+      background: linear-gradient(120deg, #232b38 90%, #232e48cc 100%);
+      border-radius: 28px;
+      box-shadow: 0 8px 38px #17f3ff33, 0 2px 8px #fff1;
+      max-width: 640px;
+      margin: 52px auto 0 auto;
+      padding: 38px 28px 29px 28px;
+      border: 2px solid #17f3ff45;
+      color: #fff;
+      opacity:0; transform: translateY(70px) scale(.98);
+      animation: fade-in-up2 1.25s cubic-bezier(.25,1.14,.55,1.12) .44s forwards;
+      will-change: transform;
+      position:relative;
+      z-index:4;
+    }
+    .contact-form-section h2 {
+      color: var(--accent);
+      font-size: 1.35rem;
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 25px;
+      text-align: center;
+      text-shadow: 0 1px 13px #17f3ff44;
+    }
+    .contact-form-section label { color: var(--primary); font-weight: 600;}
+    .form-control, textarea.form-control {
+      background: #191f2d;
+      border: 1.5px solid #323b4d;
+      color: #fff;
+      border-radius: 17px;
+      box-shadow: 0 2px 8px #17f3ff1c;
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      padding: 10px 17px;
+      transition: border-color 0.18s, box-shadow 0.21s;
+    }
+    .form-control:focus, textarea.form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 2px 19px #17f3ff66;
+      background: #181e28;
+      color: #fff;
+    }
+    .invalid-feedback { color: #ff3e3e; font-size: .93em; }
+    .btn-contact {
+      background: linear-gradient(90deg, var(--accent) 70%, var(--primary) 100%);
+      color: #161616;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      font-size: 1.13rem;
+      padding: 11px 41px;
+      border-radius: 24px;
+      box-shadow: 0 3px 11px #17f3ff22;
+      border: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 10px;
+      transition: background 0.17s, color 0.18s, box-shadow 0.17s;
+      position:relative;
+      overflow:hidden;
+    }
+    .btn-contact:after {
+      content:'';
+      display:block;
+      position:absolute;
+      inset:0;
+      background: radial-gradient(ellipse at 40% 40%, #17f3ff55 0%, #0000 80%);
+      opacity:0;
+      transition:.14s;
+      border-radius:24px;
+      z-index:0;
+      pointer-events:none;
+    }
+    .btn-contact:hover, .btn-contact:focus {
+      background: linear-gradient(90deg, var(--neon-pink), var(--accent));
+      color: #fff;
+      box-shadow: 0 6px 38px #f12fbb65;
+    }
+    .btn-contact:hover:after, .btn-contact:focus:after {
+      opacity:.47;
+      animation: btnRipple .7s linear;
+    }
+    @keyframes btnRipple {
+      0%{ opacity:0;}
+      55%{ opacity:.47;}
+      100%{ opacity:0;}
+    }
+    .contact-form-section .form-text {
+      color: #81ffe2c0;
+      font-size: .97em;
+      margin-top: 0;
+      margin-bottom: 0.3em;
+    }
+    .site-footer {
+      background: #181e28;
+      color: #e0fdff;
+      border-top: 2px solid #17f3ff44;
+      margin-top: 60px;
+      padding: 38px 0 20px 0;
+      font-family: 'Orbitron', Arial, sans-serif;
+      letter-spacing: 1.2px;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+    .site-footer h5 {
+      color: var(--accent);
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 2.5px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 12px #17f3ff55, 0 2px 7px #f12fbb99;
+    }
+    .site-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color .18s;
+      font-size: 1.09em;
+      letter-spacing: 1px;
+    }
+    .site-footer a:hover {
+      color: var(--accent);
+      text-shadow: 0 1px 6px #17f3ff88;
+    }
+    .site-footer .fa, .site-footer .fab, .site-footer .fas {
+      color: var(--neon-pink);
+      margin: 0 7px;
+      transition: color .17s, text-shadow .17s;
+      text-shadow: 0 0 12px #f12fbb55;
+    }
+    .site-footer .fa:hover, .site-footer .fab:hover, .site-footer .fas:hover {
+      color: var(--primary);
+      text-shadow: 0 0 16px #ffc10799, 0 1px 7px #17f3ff99;
+    }
+    .site-footer p {
+      color: #e0fdff !important;
+    }
+    .site-footer .col-md-4 {
+      margin-bottom: 1rem;
+    }
+    @media (max-width:600px) {
+      .site-footer { padding: 24px 0 14px 0; }
+      .site-footer h5 { font-size: 1rem; }
+      .site-footer a { font-size: 0.95em; }
+      .site-footer .fa, .site-footer .fab, .site-footer .fas { font-size: 1.1rem; }
+      .site-footer .row { flex-direction: column; text-align: center; }
+      .site-footer .col-md-4 { margin-bottom: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="arcade-rays"></div>
+  <div id="particles-js"></div>
+  <div class="neon-grid-bg"></div>
+  <div id="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link active" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Hero -->
+    <section class="contact-hero">
+      <span class="badge-tag">Contact & Support</span>
+      <span class="badge-tag">24/7 Availability</span>
+      <h1>Contact Pro Arcade</h1>
+      <p>
+        We value your feedback and inquiries! <br>
+        Whether you're facing issues, want to report a bug, suggest a game, or just say hi — <b>reach out anytime!</b>
+        <br>
+        <span style="color:#ffc107">Your input helps us create the ultimate arcade experience for all players.</span>
+      </p>
+    </section>
+    <div class="container mb-5 mt-2">
+      <div class="row-contact">
+        <!-- Contact Info Card -->
+        <div class="contact-info-box tilt3d">
+          <h2><i class="fas fa-info-circle"></i> Contact Information</h2>
+          <ul class="contact-details ps-1">
+            <li><i class="fas fa-user"></i> <span class="label">Developer:</span> Amna Sanober</li>
+            <li><i class="fas fa-envelope"></i> <span class="label">Email:</span> info@proarcade.com</li>
+            <li><i class="fab fa-whatsapp"></i> <span class="label">WhatsApp:</span> +92 123 4567890</li>
+            <li><i class="fas fa-map-marker-alt"></i> <span class="label">City:</span> Lahore, Pakistan</li>
+            <li><i class="fas fa-globe"></i> <span class="label">Website:</span> www.proarcade.com</li>
+          </ul>
+          <div class="contact-social mt-3">
+            <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="mailto:info@proarcade.com" title="Email"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+        <!-- Map Card -->
+        <div class="contact-map-card tilt3d">
+          <div class="contact-map w-100">
+            <iframe src="https://maps.google.com/maps?q=Lahore,%20Pakistan&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+      <!-- Contact Form Section -->
+      <div class="contact-form-section mt-5 tilt3d">
+        <h2><i class="fas fa-paper-plane"></i> Send Us a Message</h2>
+        <form id="contactForm" novalidate autocomplete="off">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="name" class="form-label">Full Name*</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+              <div class="invalid-feedback">Name is required.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label">Email Address*</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+              <div class="invalid-feedback">Valid email is required.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="phone" class="form-label">Phone/WhatsApp*</label>
+              <input type="tel" class="form-control" id="phone" name="phone"
+                     placeholder="+92 300 1234567" 
+                     pattern="^(\+92|0092)?\s?\d{3}[\s-]?\d{7}$" required
+                     title="Valid Pakistan number: +92 300 1234567">
+              <div class="invalid-feedback">
+                Valid Pakistani number required. e.g. +92 300 1234567
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="subject" class="form-label">Subject</label>
+              <input type="text" class="form-control" id="subject" name="subject" placeholder="Message Subject">
+            </div>
+            <div class="col-12">
+              <label for="message" class="form-label">Your Message*</label>
+              <textarea class="form-control" id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+              <div class="invalid-feedback">Message is required.</div>
+              <div class="form-text">We typically respond within 24 hours!</div>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-contact px-5" type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container text-center text-light">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Quick Links</h5>
+            <a href="index.html" class="text-decoration-none d-block">Home</a>
+            <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+            <a href="about.html" class="text-decoration-none d-block">About</a>
+            <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Contact</h5>
+            <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+            <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+            <div>
+              <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+              <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Arcade Info</h5>
+            <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- Sound & tsParticles -->
+  <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>
+  <audio id="snd-hover" src="data/hover_sound.wav" preload="auto"></audio>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js"></script>
+  <script>
+    // tsParticles BG
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      particles: {
+        number: { value: 69 },
+        color: { value: ["#17f3ff", "#ffc107", "#f12fbb"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.18 },
+        size: { value: 6, random: true },
+        move: { enable: true, speed: 1.1 },
+        links: {
+          enable: true,
+          color: "#17f3ff",
+          distance: 118,
+          opacity: 0.21,
+          width: 1.6
+        }
+      },
+      background: { color: "transparent" }
+    });
+
+    // 3D Tilt on cards
+    function add3DTilt(selector, maxTilt=16) {
+      document.querySelectorAll(selector).forEach(card=>{
+        card.addEventListener('mousemove', e=>{
+          let rect = card.getBoundingClientRect();
+          let x = e.clientX - rect.left, y = e.clientY - rect.top;
+          let cx = rect.width/2, cy = rect.height/2;
+          let dx = (x-cx)/cx, dy = (y-cy)/cy;
+          let rx = -dy*maxTilt, ry = dx*maxTilt;
+          card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.06)`;
+          card.classList.add('tilted');
+        });
+        card.addEventListener('mouseleave', e=>{
+          card.style.transform = '';
+          card.classList.remove('tilted');
+        });
+        card.addEventListener('touchstart',()=>card.classList.add('tilted'));
+        card.addEventListener('touchend',()=>card.classList.remove('tilted'));
+      });
+    }
+    window.addEventListener('DOMContentLoaded', ()=>{
+      add3DTilt('.tilt3d',16);
+    });
+
+    // Sound hover/click
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgSound = document.getElementById('bgSound');
+      bgSound.volume = 0.33;
+      let played = false;
+      function tryPlayBg() {
+        if (!played) {
+          bgSound.play().catch(()=>{});
+          played = true;
+        }
+      }
+      window.addEventListener('click', tryPlayBg, { once: true });
+      window.addEventListener('keydown', tryPlayBg, { once: true });
+      window.addEventListener('touchstart', tryPlayBg, { once: true });
+
+      function playHover(e) {
+        let audio = document.getElementById('snd-hover');
+        audio.pause();
+        audio.currentTime = 0;
+        audio.play();
+      }
+      document.querySelectorAll(
+        '.nav-link, .contact-info-box, .contact-map-card, .contact-social a, .btn-contact, .form-control, .tilt3d'
+      ).forEach(el=>{
+        el.addEventListener('mouseenter', playHover);
+        el.addEventListener('click', playHover);
+        el.addEventListener('touchstart', playHover, {passive:true});
+      });
+    });
+
+    // Contact Form Validation (Pakistan number)
+    (function () {
+      'use strict'
+      var form = document.getElementById('contactForm');
+      form.addEventListener('submit', function (event) {
+        var phoneInput = document.getElementById('phone');
+        var phoneValue = phoneInput.value.trim();
+        var pkPhonePattern = /^(\+92|0092)?\s?\d{3}[\s-]?\d{7}$/;
+        if (!pkPhonePattern.test(phoneValue)) {
+          phoneInput.setCustomValidity('Invalid Pakistan number');
+        } else {
+          phoneInput.setCustomValidity('');
+        }
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    })();
+  </script>
+</body>
+</html>

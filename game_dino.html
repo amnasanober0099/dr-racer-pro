@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Dino Run - Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(29, 34, 46, 0.87);
+      --card-border: rgba(23, 243, 255, 0.21);
+    }
+    body {
+      font-family: 'Russo One', 'Orbitron', Arial, sans-serif;
+      background: #181b21; color: #fff; min-height: 100vh;
+      margin: 0; padding: 0;
+    }
+    #bg-video {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      object-fit: cover; z-index: 0; background: #181b21;
+      pointer-events: none;
+    }
+    .bg-video-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(24,27,33,0.78); z-index: 1;
+      pointer-events: none;
+    }
+    #particles-js {position: fixed; inset: 0; z-index: 2; pointer-events: none;}
+    .content-main { position: relative; z-index: 3;}
+    .game-wrap {background:transparent;}
+    .game-card-arcade {
+      background: var(--glass); border: 2.5px solid var(--card-border);
+      border-radius: 1.3rem; box-shadow: 0 8px 35px #ffc10729, 0 2px 9px #0008;
+      padding: 1.25rem 0.8rem 1rem 0.8rem; margin: 1.1rem auto 1.1rem;
+      max-width: 700px; margin-left: auto; margin-right: auto;
+      position:relative; z-index:2; backdrop-filter: blur(8px);
+    }
+    h2.fw-bold {
+      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
+      color: var(--primary); letter-spacing: 2px;
+      font-size: 2.1rem; text-shadow:0 4px 20px #ffc10744;
+    }
+    .dino-canvas {
+      width:100%;max-width:650px;height:220px;display:block;margin:auto;
+      border-radius:1.1rem; border:4px solid #333;
+      background: #e7f6fd;
+      box-shadow: 0 0 30px #191b29, 0 8px 34px #ffc10716;
+      margin-bottom: 1rem; margin-top: 0.5rem;
+      transition: box-shadow .22s;
+      touch-action: none;
+    }
+    @media (max-width: 820px) {
+      .game-card-arcade {max-width:99vw; padding:0.55rem 0.09rem;}
+      .dino-canvas {max-width:99vw;height:29vw;min-height:82px;}
+    }
+    @media (max-width: 500px) {
+      .game-card-arcade {padding: 0.25rem 0.03rem;}
+      .dino-canvas {height:120px;}
+      h2.fw-bold {font-size: 1.1rem;}
+    }
+    .game-controls button,
+    .game-controls a.btn {
+      min-width:88px; font-size:0.98rem;
+      font-family:'Orbitron',sans-serif; box-shadow: 0 3px 12px #ffc10736;
+      border-radius:14px; margin-bottom:3px; margin-top:3px;
+      padding: 0.17rem 0.38rem; transition: background 0.17s, color 0.16s, box-shadow .17s;
+      font-weight:bold;
+    }
+    .game-controls .btn-success { background:linear-gradient(90deg,#ffc107,#49fcb1); border:none; color:#181818;}
+    .game-controls .btn-success:hover,.game-controls .btn-success:focus {background:linear-gradient(90deg,#0ef,#ffc107); color:#fff;}
+    .game-controls .btn-danger {background:linear-gradient(90deg,#ff3860,#ffb677); border:none;}
+    .game-controls .btn-danger:hover {background:linear-gradient(90deg,#f12fbb,#ff3860); color:#fff;}
+    .game-controls .btn-warning {background:linear-gradient(90deg,#49fcb1,#0ef); border:none;}
+    .game-controls .btn-warning:hover {background:linear-gradient(90deg,#0ef,#49fcb1); color:#181818;}
+    .game-controls .btn-outline-info, .game-controls .btn-outline-secondary {
+      font-size:0.94rem; border-radius: 14px; padding: 0.15rem 0.9rem; font-weight: bold;
+    }
+    .score-badges .badge { font-size: 1.02rem; letter-spacing:1px; margin-right: 7px;}
+    .score-badges .bg-success {background:linear-gradient(90deg,#17f3ff,#49fcb1)!important; color:#181818;}
+    .score-badges .bg-info {background:linear-gradient(90deg,#ffc107,#17f3ff)!important; color:#181818;}
+    .controls-row {
+      background:rgba(28,36,55,0.95); padding:0.34rem 0;
+      border-radius:0.7rem; box-shadow:0 3px 10px #17f3ff0c;
+      margin-bottom: 1rem; margin-top: 0.31rem;
+    }
+    .arcade-controls span.badge {
+      font-size:0.97rem; background:linear-gradient(90deg,#ffc107,#333)!important;
+      color:#1b232b; margin-right:4px; margin-bottom: 2px; font-family:'Orbitron',sans-serif;
+    }
+    .howtoplay-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; min-height: 100vh;
+      align-items: center; justify-content: center; z-index: 99999; background: #191d27e0;
+    }
+    .howtoplay-modal.show { display: flex !important; }
+    .howtoplay-modal .card {
+      max-width: 340px; width: 92vw; max-height: 92vh; overflow-y: auto;
+      border: 2.5px solid var(--accent); border-radius: 1rem; box-shadow: 0 0 18px #17f3ff28;
+      background: var(--glass); color: #fff; padding: 1.2rem 0.6rem 1rem 0.6rem; margin: auto; position: relative;
+      animation: popup-in .19s cubic-bezier(.3,1.2,.5,1.2);
+    }
+    @media (max-width: 500px) {
+      .howtoplay-modal .card { max-width: 97vw; padding: 0.8rem 0.15rem; }
+    }
+    @keyframes popup-in { from { transform: scale(0.85) translateY(25px); opacity: 0; } to   { transform: scale(1) translateY(0); opacity: 1; } }
+    .howtoplay-modal ul {padding-left:1.1rem;} .howtoplay-modal li {margin-bottom:.6rem;}
+    .howtoplay-modal .btn-danger {background:linear-gradient(90deg,#ff3860,#ffb677); border:none; font-weight:bold; border-radius:2rem;}
+    ::-webkit-scrollbar { width:10px; background:#232b3a;}
+    ::-webkit-scrollbar-thumb { background:#17f3ff26; border-radius:7px;}
+  </style>
+</head>
+
+<body>
+  <!-- Background Video -->
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="data/bg_section.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay"></div>
+  <div id="particles-js"></div>
+  <div class="content-main">
+    <!-- ===== Navbar ===== -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="container py-4 game-wrap">
+      <div class="game-card-arcade">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h2 class="fw-bold mb-0"><i class="fas fa-paw text-secondary"></i> Dino Run</h2>
+          <div class="game-controls d-flex gap-2">
+            <a href="leaderboard.html" class="btn btn-outline-info"><i class="fas fa-trophy"></i> Leaderboard</a>
+            <a href="#" id="howToPlayBtn" class="btn btn-outline-secondary"><i class="fas fa-question-circle"></i> How to Play</a>
+          </div>
+        </div>
+        <canvas id="dinoCanvas" width="650" height="220" class="dino-canvas"></canvas>
+        <div class="mt-2 d-flex flex-wrap gap-2 justify-content-center game-controls">
+          <button class="btn btn-success fw-bold" id="btnStart"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-danger fw-bold" id="btnPause"><i class="fas fa-pause"></i> Pause</button>
+          <button class="btn btn-warning fw-bold" id="btnRestart"><i class="fas fa-undo"></i> Restart</button>
+        </div>
+        <div class="score-badges text-center mt-3">
+          <span class="badge bg-success me-2" id="scoreLabel">Score: 0</span>
+          <span class="badge bg-info" id="highScoreLabel">High Score: 0</span>
+        </div>
+        <div class="controls-row text-center mt-3">
+          <b>Controls:</b>
+          <span class="arcade-controls">
+            <span class="badge"><i class="fas fa-arrow-up"></i> / Space</span> Jump <span class="badge d-inline d-sm-none">TAP</span> (Mobile)
+          </span>
+        </div>
+      </div>
+    </main>
+    <!-- How to Play Modal -->
+    <div id="howtoplayModal" class="howtoplay-modal">
+      <div class="card p-4 mx-auto position-relative">
+        <button class="btn btn-danger position-absolute top-0 end-0 m-2" onclick="hideHowToPlay()" tabindex="1"><i class="fas fa-times"></i></button>
+        <h4 class="mb-2 text-secondary"><i class="fas fa-question-circle"></i> How to Play</h4>
+        <ul>
+          <li>Press <b>Space</b> or <b>↑</b> arrow or <b>Tap</b> (mobile) to Jump</li>
+          <li>Avoid cactus — hitting it ends the game!</li>
+          <li>Score increases with distance</li>
+          <li>Try to beat your high score!</li>
+        </ul>
+      </div>
+    </div>
+    <!-- ===== Footer ===== -->
+    <footer class="site-footer py-4 mt-5 border-top">
+      <div class="container text-center text-light">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Quick Links</h5>
+            <a href="index.html" class="text-decoration-none d-block">Home</a>
+            <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+            <a href="about.html" class="text-decoration-none d-block">About</a>
+            <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Contact</h5>
+            <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+            <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+            <div>
+              <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+              <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold mb-3">Arcade Info</h5>
+            <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- ====== Arcade Game Sound Effects ====== -->
+  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+  <audio id="jumpSound" src="data/jump.mp3"></audio>
+  <audio id="gameOverSound" src="data/gameover.wav"></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav"></audio>
+  <script src="game_dino.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 28, "density": { "enable": true, "value_area": 650 } },
+        "color": { "value": ["#ffc107", "#17f3ff", "#f12fbb"] },
+        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000" } },
+        "opacity": { "value": 0.19, "random": true, "anim": { "enable": false } },
+        "size": { "value": 7, "random": true },
+        "line_linked": { "enable": true, "distance": 120, "color": "#ffc10744", "opacity": 0.10, "width": 1.4 },
+        "move": { "enable": true, "speed": 2.1, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "repulse" } },
+        "modes": { "repulse": { "distance": 75, "duration": 0.34 } }
+      },
+      "retina_detect": true
+    });
+    // Button hover sound
+    const hoverSound = document.getElementById('hoverSound');
+    document.querySelectorAll('.btn, .nav-link').forEach(btn => {
+      btn.addEventListener('mouseenter', function () {
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+      });
+    });
+    // Modal Controls
+    const modal = document.getElementById('howtoplayModal');
+    document.getElementById('howToPlayBtn').onclick = function (e) {
+      e.preventDefault();
+      modal.classList.add('show');
+      document.body.style.overflow = "hidden";
+      setTimeout(() => { document.querySelector('#howtoplayModal button').focus(); }, 150);
+    }
+    function hideHowToPlay() {
+      modal.classList.remove('show');
+      document.body.style.overflow = "";
+    }
+    window.hideHowToPlay = hideHowToPlay;
+    window.addEventListener('keydown', function (e) {
+      if (modal.classList.contains('show') && (e.key === "Escape" || e.key === "Esc")) hideHowToPlay();
+    });
+    modal.addEventListener('mousedown', function (e) {
+      if (e.target === modal) hideHowToPlay();
+    });
+  </script>
+</body>
+</html>

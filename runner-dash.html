@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Runner Dash – Pro Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #ffc107;
+      --accent: #17f3ff;
+      --neon-pink: #f12fbb;
+      --glass: rgba(29, 34, 46, 0.87);
+      --card-border: rgba(23, 243, 255, 0.21);
+      --hero-grad: linear-gradient(90deg, #fff0, #17f3ff90 60%, #fff0);
+    }
+    body {
+      background: transparent !important;
+      color: #fff;
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      filter: brightness(0.23) blur(2.2px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .main-title,
+    .top-game-controls,
+    .game-box,
+    footer {
+      position: relative;
+      z-index: 2;
+    }
+    .main-title {
+      text-align: center;
+      font-size: 2.08rem;
+      text-shadow: 0 0 14px var(--accent),0 0 2px #fff6;
+      letter-spacing: 2px;
+      font-family: 'Orbitron',sans-serif;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+    }
+    .top-game-controls {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.18rem;
+      flex-wrap: wrap;
+    }
+    .how-to-link {
+      font-size: 1.09rem;
+      border-radius: 1.2rem;
+      background: var(--neon-pink);
+      color: #fff !important;
+      padding: 6px 20px 6px 18px;
+      font-weight: bold;
+      border: none;
+      text-shadow: 0 0 8px var(--neon-pink), 0 0 2px #fff8;
+      margin: 0 6px;
+      opacity: 0.98;
+      box-shadow: 0 0 16px #f12fbb70;
+      cursor: pointer;
+      transition: background 0.16s, color 0.14s;
+    }
+    .how-to-link:hover {
+      background: var(--primary);
+      color: #222!important;
+      box-shadow: 0 0 14px #17f3ff80;
+    }
+    .game-box {
+      background: rgba(29,34,46,0.93);
+      border-radius: 1.4rem;
+      box-shadow: 0 0 30px #17f3ff23, 0 0 6px var(--primary);
+      border: 2px solid #17f3ff19;
+      padding: 1.3rem 0 1.7rem 0;
+      margin-bottom: 2.3rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      overflow: visible;
+    }
+    #gameCanvas {
+      display: block;
+      background: linear-gradient(#242c42 85%, #21252f 100%);
+      border-radius: 1.1rem;
+      border: 3px solid #17f3ff66;
+      box-shadow: 0 0 18px #17f3ff44;
+      margin: 0 auto 0.7rem auto;
+      width: 420px;
+      height: 250px;
+      max-width: 98vw;
+      max-height: 44vw;
+      touch-action: manipulation;
+    }
+    #effect-msg {
+      min-height: 36px;
+      text-align: center;
+      font-family: 'Orbitron', 'Russo One', cursive;
+      font-size: 1.42rem;
+      color: #fff;
+      text-shadow: 0 0 13px #17f3ff, 0 0 2px #fff;
+      font-weight: bold;
+      letter-spacing: 1.7px;
+      position: absolute;
+      left: 0; right: 0;
+      margin: auto;
+      top: 45px;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .41s, transform .41s;
+    }
+    #effect-msg.show {
+      opacity: 1;
+      transform: scale(1.14) rotate(-2deg);
+      animation: msgpop .95s cubic-bezier(.14,1.37,.53,.91);
+    }
+    @keyframes msgpop {
+      0% { opacity:0; transform:scale(0.75);}
+      50% {opacity:1; transform:scale(1.18) rotate(-4deg);}
+      100%{opacity:0;}
+    }
+    .arcade-btn {
+      background: var(--neon-pink)!important;
+      color: #fff!important;
+      border-radius: 1.3rem!important;
+      font-weight: bold;
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+      box-shadow: 0 0 10px #f12fbb60;
+      letter-spacing: 1.2px;
+      font-size: 1.08rem;
+      padding: 8px 24px;
+      margin: 0 3px;
+      border: none!important;
+      outline: none!important;
+      transition: background .17s;
+    }
+    .arcade-btn:hover {
+      background: var(--primary)!important;
+      color: #111!important;
+      box-shadow: 0 0 18px #17f3ff80;
+    }
+    .game-stats {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.15rem;
+      font-family: 'Orbitron',sans-serif;
+      letter-spacing: 1px;
+      font-weight: 600;
+      text-shadow: 0 0 8px #f12fbb53;
+    }
+    #game-status {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px var(--neon-pink);
+      min-height: 32px;
+      margin-top: 8px;
+      text-align: center;
+    }
+    .modal-content {
+      background: #20254a;
+      color: #fff;
+      border-radius: 1.2rem;
+      box-shadow: 0 0 22px #17f3ff44;
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+    }
+    .modal-header { border-bottom: none;}
+    .modal-title { color: var(--primary);}
+    .btn-close { filter: invert(1);}
+    .modal.fade .modal-dialog {
+      display: flex !important;
+      align-items: center !important;
+      min-height: 100vh !important;
+    }
+    .modal-dialog-centered { min-height: 100vh; }
+    @media (max-width:600px) {
+      #gameCanvas{width:99vw;height:35vw;min-height:108px;}
+      .game-box{padding:0.7rem 0 1.4rem 0;}
+      .main-title{font-size:1.13rem;}
+      #effect-msg{font-size:1.1rem;top:25px;}
+      .modal-dialog-centered { min-height: 100vh; }
+      .modal-content { border-radius: 0.6rem; }
+    }
+    @media (max-width:420px) {
+      #gameCanvas { width: 99vw; height: 32vw; min-height: 90px;}
+      #effect-msg{font-size:0.93rem;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Video -->
+  <video class="bg-video" src="data/bg_section.mp4" autoplay loop muted></video>
+
+  <!-- ==== SOUND ELEMENTS ==== -->
+  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+  <audio id="jumpSound" src="data/balljump.mp3"></audio>
+  <audio id="slideSound" src="data/slide.mp3"></audio>
+  <audio id="coinSound" src="data/coin.mp3"></audio>
+  <audio id="gameoverSound" src="data/gameover.mp3"></audio>
+  <audio id="hoverSound" src="data/hover_sound.wav"></audio>
+  <!-- ========================= -->
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-1" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="main-title">🏃‍♂️ RUNNER DASH</div>
+  <!-- Game Top Controls -->
+  <div class="top-game-controls mb-1">
+    <button class="how-to-link" data-bs-toggle="modal" data-bs-target="#howToPlayModal">
+      <i class="fa fa-question-circle"></i> How to Play
+    </button>
+  </div>
+  <!-- Game Box -->
+  <div class="game-box shadow-lg">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3" style="position:relative;">
+      <canvas id="gameCanvas" width="420" height="250"></canvas>
+      <div id="effect-msg"></div>
+    </div>
+    <div class="game-stats mb-2">
+      Score: <span id="score">0</span>
+      &nbsp; | Coins: <span id="coins">0</span>
+      &nbsp; | Steps: <span id="steps">0</span>
+    </div>
+    <div class="text-center mb-2">
+      <button class="arcade-btn" id="btnStart"><i class="fa fa-play"></i> Start</button>
+      <button class="arcade-btn" id="btnRestart"><i class="fa fa-undo"></i> Restart</button>
+    </div>
+    <div id="game-status"></div>
+  </div>
+  <!-- Footer -->
+  <footer class="py-4 mt-5 border-top">
+    <div class="container text-center text-light">
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Quick Links</h5>
+          <a href="index.html" class="text-decoration-none d-block">Home</a>
+          <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
+          <a href="about.html" class="text-decoration-none d-block">About</a>
+          <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Contact</h5>
+          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
+          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
+          <div>
+            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <h5 class="fw-bold mb-3">Arcade Info</h5>
+          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- How to Play Modal -->
+  <div class="modal fade" id="howToPlayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" style="color:var(--accent);">How to Play</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li><b>Jump:</b> Press <b>W</b> or <b>Space</b> to jump over obstacles</li>
+            <li><b>Slide:</b> Press <b>S</b> or <b>↓ Arrow</b> or <b>2-finger tap</b> for tall obstacles</li>
+            <li>Collect coins, increase score and steps!</li>
+            <li>After "Game Over", press Restart</li>
+            <li>Enjoy arcade compliments & effects!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Game Script -->
+  <script src="runner-dash.js"></script>
+  <!-- BG MUSIC & BUTTON HOVER -->
+  <script>
+    // BG music start on first interaction
+    const bgMusic = document.getElementById('bgMusic');
+    let musicStarted = false;
+    function startBgMusic() {
+      if (!musicStarted) {
+        bgMusic.volume = 0.23;
+        bgMusic.play().catch(()=>{});
+        musicStarted = true;
+      }
+    }
+    ['click','keydown','touchstart'].forEach(ev=>{
+      window.addEventListener(ev, startBgMusic, { once: true });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) bgMusic.pause();
+      else if (musicStarted) bgMusic.play().catch(()=>{});
+    });
+
+    // Button/nav hover sound
+    const hoverSound = document.getElementById('hoverSound');
+    document.querySelectorAll('.btn, .nav-link, .arcade-btn, .how-to-link').forEach(btn=>{
+      btn.addEventListener('mouseenter', function () {
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+      });
+    });
+  </script>
+</body>
+</html>
