@@ -4,11 +4,13 @@
   <meta charset="UTF-8" />
   <title>Tic Tac Toe – Pro Arcade</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <!-- Bootstrap & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
   <style>
     :root {
       --primary: #ffc107;
@@ -18,6 +20,7 @@
       --card-border: rgba(23, 243, 255, 0.21);
       --hero-grad: linear-gradient(90deg, #fff0, #17f3ff90 60%, #fff0);
     }
+
     body {
       font-family: 'Russo One','Orbitron',Arial,sans-serif;
       background: transparent;
@@ -25,7 +28,10 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      margin:0;
     }
+
+    /* Background video (behind everything) */
     .bg-video {
       position: fixed;
       inset: 0;
@@ -36,6 +42,25 @@
       pointer-events: none;
       z-index: 0;
     }
+
+    /* ===== LAYOUT FIX (footer visible) ===== */
+    .content-main{
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2; /* keep content above bg video */
+    }
+    .page-main{
+      flex: 1 0 auto;      /* take remaining space */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Keep navbar/footer above background */
+   
+
+    /* Card & game styles (yours) */
     .game-card-arcade {
       background: var(--glass);
       border: 2.5px solid var(--card-border);
@@ -59,16 +84,13 @@
       transition:.13s;
     }
     .tic-top-bar button:hover { background: var(--primary); color: #fff !important;}
-    .tic-mode-bar {
-      text-align:center; margin-bottom:.5rem;
-    }
+    .tic-mode-bar { text-align:center; margin-bottom:.5rem; }
     .tic-mode-bar .btn {
       border-radius:.9rem;font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:500;
       background:var(--neon-pink);color:#fff;border:none;box-shadow:0 0 7px #f12fbb44;
       margin:0 .15rem; padding:2px 11px 2px 12px;
     }
-    .tic-mode-bar .btn.active,
-    .tic-mode-bar .btn:focus {
+    .tic-mode-bar .btn.active, .tic-mode-bar .btn:focus {
       background: var(--accent); color: #191d27;
       outline: none; box-shadow:0 0 12px #17f3ff99;
     }
@@ -96,6 +118,7 @@
     .tic-cell.disabled {pointer-events:none; opacity:.8;}
     .tic-cell.win {border:3.2px solid var(--primary)!important;background:rgba(50,205,50,0.20)!important;color:var(--primary)!important;box-shadow:0 0 18px #32cd327a;}
     .status {text-align:center;font-size:1.16rem;margin-top: .3rem; min-height:1.5em;}
+
     #effect-msg {
       min-height: 16px; text-align: center; font-size: 1.01rem; color: #fff;
       text-shadow: 0 0 7px #17f3ff;
@@ -113,11 +136,13 @@
       50% {opacity:1; transform:scale(1.11) rotate(-4deg);}
       100%{opacity:0;}
     }
+
     @media(max-width:430px){
       .game-card-arcade{padding:.7rem .1rem;}
       .tic-cell{width:58px;height:58px;font-size:2rem;}
     }
-    /* Arcade theme for How to Play modal */
+
+    /* Modal theme */
     .modal-content.arcade-modal {
       background: rgba(29,34,46,0.95);
       color: #fff;
@@ -133,131 +158,152 @@
       letter-spacing: 1px;
       font-weight: bold;
     }
-    .modal-content.arcade-modal ul {
-      font-size: 1.07rem;
-    }
-    .modal-content.arcade-modal li {
-      margin-bottom: 0.3rem;
-    }
+    .modal-content.arcade-modal ul { font-size: 1.07rem; }
+    .modal-content.arcade-modal li { margin-bottom: 0.3rem; }
   </style>
 </head>
 <body>
   <!-- Background Video -->
   <video class="bg-video" src="data/bg_section.mp4" autoplay loop muted></video>
-  <!-- === SOUNDS === -->
-  <audio id="bgMusic" src="data/background-game-145867.mp3" loop></audio>
+
+  <!-- === SOUND ASSETS === -->
+  <audio id="bgMusic"    src="data/background-game-145867.mp3" loop></audio>
   <audio id="moveXSound" src="data/tick.wav"></audio>
   <audio id="moveOSound" src="data/tick.wav"></audio>
-  <audio id="winSound"  src="data/win.mp3"></audio>
+  <audio id="winSound"   src="data/win.mp3"></audio>
   <audio id="hoverSound" src="data/hover_sound.wav"></audio>
-  <!-- ============== -->
-  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse mt-1" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <main class="container game-wrap">
-    <div class="game-card-arcade text-center">
-      <div class="tic-top-bar">
-        <button class="how-to-link btn" data-bs-toggle="modal" data-bs-target="#howToPlayModal">
-          <i class="fa fa-question-circle"></i> How to Play
+  <!-- ===================== -->
+
+  <div class="content-main">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
         </button>
-        <button class="leadership-link btn" onclick="window.location='leaderboard.html';">
-          <i class="fa fa-trophy"></i> Leaderboard
-        </button>
-      </div>
-      <div class="tic-mode-bar mb-2">
-        <button class="btn btn-sm btn-pvc active" id="btnPvc">Vs Computer</button>
-        <button class="btn btn-sm btn-pvp" id="btnPvp">2 Players</button>
-      </div>
-      <h2><i class="fas fa-hashtag text-success"></i> Tic Tac Toe</h2>
-      <div class="status" id="status">Player <strong>X</strong>'s turn</div>
-      <div id="effect-msg"></div>
-      <div class="tic-board" id="board">
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-        <div class="tic-cell" data-cell></div>
-      </div>
-      <button class="btn btn-outline-light mt-2" id="restart">
-        <i class="fas fa-undo"></i> Restart Game
-      </button>
-    </div>
-  </main>
-  <footer class="py-4 mt-5 border-top">
-    <div class="container text-center text-light">
-      <div class="row">
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Quick Links</h5>
-          <a href="index.html" class="text-decoration-none d-block">Home</a>
-          <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
-          <a href="about.html" class="text-decoration-none d-block">About</a>
-          <a href="contact.html" class="text-decoration-none d-block">Contact</a>
-        </div>
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Contact</h5>
-          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
-          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
-          <div>
-            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
-            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
-            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
-          </div>
-        </div>
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Arcade Info</h5>
-          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-  <!-- How to Play Modal - Arcade Glass Theme -->
-  <div class="modal fade" id="howToPlayModal" tabindex="-1" aria-labelledby="howToPlayLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content arcade-modal">
-        <div class="modal-header pb-1 border-0">
-          <h5 class="modal-title" id="howToPlayLabel">
-            <i class="fa fa-question-circle"></i> How to Play
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);" aria-label="Close"></button>
-        </div>
-        <div class="modal-body pt-1">
-          <ul>
-            <li>Choose <b>Vs Computer</b> or <b>2 Players</b> mode.</li>
-            <li>Players take turns marking <span style="color:#ffc107;">X</span> and <span style="color:#f12fbb;">O</span>.</li>
-            <li>First to get <b>3 in a row</b> (line, column, diagonal) wins.</li>
-            <li>Winning line will be <span style="color:#17f3ff">highlighted</span>.</li>
-            <li>Enjoy, and see <span style="color:#ffc107">Good/Amazing</span> effects when you win!</li>
+        <div class="collapse navbar-collapse mt-1" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.html"><i class="fa fa-envelope"></i> Login / Sign Up</a></li>
           </ul>
         </div>
       </div>
+    </nav>
+
+    <!-- PAGE MAIN -->
+    <div class="page-main">
+      <main class="container game-wrap">
+        <div class="game-card-arcade text-center">
+          <div class="tic-top-bar">
+            <button class="how-to-link btn" data-bs-toggle="modal" data-bs-target="#howToPlayModal">
+              <i class="fa fa-question-circle"></i> How to Play
+            </button>
+            <button class="leadership-link btn" onclick="window.location='leaderboard.html';">
+              <i class="fa fa-trophy"></i> Leaderboard
+            </button>
+          </div>
+
+          <div class="tic-mode-bar mb-2">
+            <button class="btn btn-sm btn-pvc active" id="btnPvc">Vs Computer</button>
+            <button class="btn btn-sm btn-pvp" id="btnPvp">2 Players</button>
+          </div>
+
+          <h2><i class="fas fa-hashtag text-success"></i> Tic Tac Toe</h2>
+          <div class="status" id="status">Player <strong>X</strong>'s turn</div>
+
+          <div id="effect-msg"></div>
+
+          <div class="tic-board" id="board">
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+            <div class="tic-cell" data-cell></div>
+          </div>
+
+          <button class="btn btn-outline-light mt-2" id="restart">
+            <i class="fas fa-undo"></i> Restart Game
+          </button>
+        </div>
+      </main>
     </div>
-  </div>
+
+    <!-- How to Play Modal -->
+    <div class="modal fade" id="howToPlayModal" tabindex="-1" aria-labelledby="howToPlayLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content arcade-modal">
+          <div class="modal-header pb-1 border-0">
+            <h5 class="modal-title" id="howToPlayLabel">
+              <i class="fa fa-question-circle"></i> How to Play
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);" aria-label="Close"></button>
+          </div>
+          <div class="modal-body pt-1">
+            <ul>
+              <li>Choose <b>Vs Computer</b> or <b>2 Players</b> mode.</li>
+              <li>Players take turns marking <span style="color:#ffc107;">X</span> and <span style="color:#f12fbb;">O</span>.</li>
+              <li>First to get <b>3 in a row</b> (line, column, diagonal) wins.</li>
+              <li>Winning line will be <span style="color:#17f3ff">highlighted</span>.</li>
+              <li>Enjoy, and see <span style="color:#ffc107">Good/Amazing</span> effects when you win!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row text-center text-md-start align-items-start">
+          <div class="col-md-4 mb-3">
+            <h5><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <a class="footer-link" href="index.html"><i class="fa fa-home me-2"></i>Home</a>
+            <a class="footer-link" href="leaderboard.html"><i class="fa fa-trophy me-2"></i>Leaderboard</a>
+            <a class="footer-link" href="about.html"><i class="fa fa-info-circle me-2"></i>About</a>
+            <a class="footer-link" href="contact.html"><i class="fa fa-envelope me-2"></i>Contact</a>
+          </div>
+          <div class="col-md-4 mb-3 text-center">
+            <h5><i class="fas fa-headset me-2"></i>Contact</h5>
+            <div><i class="fas fa-envelope"></i> info@proarcade.com</div>
+            <div class="mb-2"><i class="fab fa-whatsapp"></i> +92 123 4567890</div>
+            <div class="footer-social">
+              <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+              <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+              <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+              <a href="#"><i class="fab fa-discord"></i> Discord</a>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3 text-md-end text-center">
+            <h5><i class="fas fa-info-circle me-2"></i>Arcade Info</h5>
+            <p class="mb-1">© 2025 <b>Pro Arcade</b></p>
+            <p class="mb-0">By <b>Amna Sanober</b></p>
+          </div>
+        </div>
+        <hr class="border border-info border-2 opacity-50">
+        <p class="footer-copy text-center mb-0">Made with <i class="fas fa-heart text-danger"></i> for Neon Arcade lovers.</p>
+      </div>
+    </footer>
+  </div><!-- /.content-main -->
+
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="tic_tac_toe.js"></script>
   <script>
     // BG music start on first interaction
-    const bgMusic = document.getElementById('bgMusic');
+    const bgMusic   = document.getElementById('bgMusic');
+    const hoverSound= document.getElementById('hoverSound');
     let musicStarted = false;
+
     function startBgMusic() {
       if (!musicStarted) {
         bgMusic.volume = 0.20;
@@ -273,17 +319,15 @@
       else if (musicStarted) bgMusic.play().catch(()=>{});
     });
 
-    // Button/nav hover sound
-    const hoverSound = document.getElementById('hoverSound');
+    // Button/nav/board hover sound
     function addHoverSound(q) {
-      document.querySelectorAll(q).forEach(btn=>{
-        btn.addEventListener('mouseenter', function () {
-          hoverSound.currentTime = 0;
-          hoverSound.play();
+      document.querySelectorAll(q).forEach(el=>{
+        el.addEventListener('mouseenter', () => {
+          try { hoverSound.currentTime = 0; hoverSound.play(); } catch(e){}
         });
       });
     }
-    addHoverSound('.btn, .nav-link, .arcade-btn, .how-to-link, .tic-cell');
+    addHoverSound('.btn, .nav-link, .tic-cell');
   </script>
 </body>
 </html>

@@ -41,39 +41,7 @@
       flex: 1 0 auto;
       width: 100%;
     }
-    .navbar {
-      background: #181b27ea !important;
-      border-bottom: 3px solid var(--accent);
-      font-family: 'Orbitron', 'Russo One', Arial, sans-serif;
-      font-size: 1.11rem;
-      border-radius: 0 0 26px 26px;
-      z-index: 100;
-      box-shadow: 0 4px 28px #17f3ff26;
-    }
-    .navbar-brand {
-      font-size: 2rem;
-      color: var(--primary);
-      letter-spacing: 2px;
-      text-shadow: 0 0 25px #ffc107a0, 0 2px 14px #17f3ff;
-    }
-    .navbar-brand span { color: var(--accent); }
-    .navbar .navbar-nav .nav-link { color: #f7fafb !important; font-size: 1.08rem;}
-    .navbar .navbar-nav .nav-link.active,
-    .navbar .navbar-nav .nav-link:focus { background: linear-gradient(90deg, #f12fbb 35%, var(--accent) 90%); color: #fff !important;}
-    .navbar .navbar-nav .nav-link:hover { background: linear-gradient(90deg, var(--primary) 50%, var(--accent) 120%); color: #1e2024 !important;}
-    .navbar-toggler { border-radius: 14px; border: 2px solid var(--accent); background: #202637; color: var(--accent); }
-    .navbar-toggler:focus { box-shadow: 0 0 0 2px #17f3ff; border-color: #f12fbb;}
-    .leaderboard-title {
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 2px;
-      color: var(--accent);
-      text-align: center;
-      margin-top: 50px;
-      margin-bottom: 18px;
-      font-size: 2.75rem;
-      text-shadow: 0 2px 24px #17f3ffdd, 0 0 42px #17f3ff88;
-      animation: neon-glow 2.5s infinite alternate;
-    }
+  
     @keyframes neon-glow {
       from { text-shadow: 0 0 18px #17f3ff, 0 0 12px #f12fbb80; }
       to   { text-shadow: 0 0 40px #17f3ffcc, 0 0 60px #f12fbb88; }
@@ -186,24 +154,26 @@
   <div id="particles-js"></div>
   <div class="content-main">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">
-          <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse mt-1" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
-          </ul>
-        </div>
+     <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-1" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+           <li class="nav-item"><a class="nav-link" href="login.html"><i class="fa fa-envelope"></i> Login / Sign Up</a></li>
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
+
     <h1 class="leaderboard-title">🏆 Game Leaderboard</h1>
     <div class="container">
       <div class="row equal-card-row d-flex flex-wrap justify-content-center">
@@ -404,33 +374,38 @@
       </div>
     </div>
   </div>
-  <footer class="py-4 border-top">
-    <div class="container text-center text-light">
-      <div class="row">
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Quick Links</h5>
-          <a href="index.html" class="text-decoration-none d-block">Home</a>
-          <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
-          <a href="about.html" class="text-decoration-none d-block">About</a>
-          <a href="contact.html" class="text-decoration-none d-block">Contact</a>
-        </div>
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Contact</h5>
-          <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
-          <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
-          <div>
-            <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
-            <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
-            <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
-          </div>
-        </div>
-        <div class="col-md-4 mb-2">
-          <h5 class="fw-bold mb-3">Arcade Info</h5>
-          <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+<footer class="site-footer">
+  <div class="container">
+    <div class="row text-center text-md-start align-items-start">
+      <div class="col-md-4 mb-3">
+        <h5><i class="fas fa-link me-2"></i>Quick Links</h5>
+        <a class="footer-link" href="index.html"><i class="fa fa-home me-2"></i>Home</a>
+        <a class="footer-link" href="leaderboard.html"><i class="fa fa-trophy me-2"></i>Leaderboard</a>
+        <a class="footer-link" href="about.html"><i class="fa fa-info-circle me-2"></i>About</a>
+        <a class="footer-link" href="contact.html"><i class="fa fa-envelope me-2"></i>Contact</a>
+      </div>
+      <div class="col-md-4 mb-3 text-center">
+        <h5><i class="fas fa-headset me-2"></i>Contact</h5>
+        <div><i class="fas fa-envelope"></i> info@proarcade.com</div>
+        <div class="mb-2"><i class="fab fa-whatsapp"></i> +92 123 4567890</div>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+          <a href="#"><i class="fab fa-discord"></i> Discord</a>
         </div>
       </div>
+      <div class="col-md-4 mb-3 text-md-end text-center">
+        <h5><i class="fas fa-info-circle me-2"></i>Arcade Info</h5>
+        <p class="mb-1">© 2025 <b>Pro Arcade</b></p>
+        <p class="mb-0">By <b>Amna Sanober</b></p>
+      </div>
     </div>
-  </footer>
+    <hr class="border border-info border-2 opacity-50">
+    <p class="footer-copy text-center mb-0">Made with <i class="fas fa-heart text-danger"></i> for Neon Arcade lovers.</p>
+  </div>
+</footer>
+
 
   <!-- Sound Effects -->
   <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap"
-    rel="stylesheet">
+    rel="stylesheet"> 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.html">
   <style>
@@ -903,138 +903,8 @@ body {
 }
 
 /* --- FOOTER --- */
-.site-footer {
-  background: #191e31;
-  border-top: 2.5px solid var(--accent);
-  box-shadow: 0 -3px 18px #17f3ff22, 0 -1px 11px #f12fbb18;
-  color: #e0fdff;
-  padding: 38px 0 20px 0;
-  font-family: 'Orbitron', Arial, sans-serif;
-  letter-spacing: 1.2px;
-  text-align: center;
-  position: relative;
-  z-index: 3;
-  overflow: hidden;
-}
-.site-footer h5 {
-  color: var(--accent);
-  font-family: 'Orbitron', Arial, sans-serif;
-  font-size: 1.3rem;
-  font-weight: bold;
-  letter-spacing: 2.5px;
-  margin-bottom: 12px;
-  text-shadow: 0 0 12px #17f3ff55, 0 2px 7px #f12fbb99;
-}
-.site-footer a {
-  color: var(--primary);
-  text-decoration: none;
-  transition: color .18s, text-shadow .18s, background .17s, transform .17s;
-  font-size: 1.09em;
-  letter-spacing: 1px;
-  border-radius: 8px;
-  padding: 2px 7px;
-  margin: 2px 1px;
-  display: inline-block;
-}
-.site-footer a:hover {
-  color: var(--accent);
-  background: #171b29;
-  text-shadow: 0 1px 6px #17f3ff88;
-  transform: scale(1.07);
-}
-.site-footer .fa, .site-footer .fab, .site-footer .fas {
-  color: var(--neon-pink);
-  margin: 0 7px;
-  transition: color .17s, text-shadow .17s, transform .18s;
-  text-shadow: 0 0 12px #f12fbb55;
-  font-size: 1.28em;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  padding: 7px 2px 4px 2px;
-}
-.site-footer .fa:hover, .site-footer .fab:hover, .site-footer .fas:hover {
-  color: var(--primary);
-  text-shadow: 0 0 16px #ffc10799, 0 1px 7px #17f3ff99;
-  background: #232a42;
-  transform: scale(1.17) rotate(-7deg);
-}
-.site-footer p {
-  color: #e0fdff !important;
-}
-.site-footer .col-md-4 {
-  margin-bottom: 1rem;
-}
-.site-footer .footer-copy {
-  margin-top: 12px;
-  color: #81ffe2;
-  font-size: 0.98rem;
-  opacity: 0.80;
-  letter-spacing: .5px;
-}
 
-/* === RESPONSIVE FOOTER === */
-@media (max-width: 992px) {
-  .site-footer {
-    padding: 24px 10px 14px;
-  }
-  .site-footer h5 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-  }
-  .site-footer a {
-    font-size: .98em;
-    display: block;
-    margin: 3px auto;
-  }
-  .site-footer .fa,
-  .site-footer .fab,
-  .site-footer .fas {
-    font-size: 1.2rem;
-    margin: 0 10px;
-  }
-  .site-footer .footer-copy {
-    font-size: .87rem;
-    margin-top: 8px;
-  }
-  .site-footer .row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    text-align: center;
-  }
-  .site-footer .col-md-4 {
-    margin-bottom: 1.3rem;
-    width: 100%;
-  }
-}
-@media (max-width: 600px) {
-  .site-footer {
-    padding: 15px 4px 8px;
-  }
-  .site-footer h5 {
-    font-size: .96rem;
-    margin-bottom: 7px;
-    letter-spacing: 1.5px;
-  }
-  .site-footer .fa, 
-  .site-footer .fab, 
-  .site-footer .fas {
-    font-size: 1.05rem;
-    margin: 0 6px;
-  }
-  .site-footer .footer-copy {
-    font-size: .74rem;
-    margin-top: 5px;
-  }
-  .site-footer a {
-    font-size: .92em;
-    padding: 2px 5px;
-  }
-  .site-footer .col-md-4 {
-    margin-bottom: .9rem;
-  }
-}
+
 
   </style>
 </head>
@@ -1053,14 +923,15 @@ body {
       <div class="collapse navbar-collapse mt-1" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+           <li class="nav-item"><a class="nav-link" href="login.html"><i class="fa fa-envelope"></i> Login / Sign Up</a></li>
         </ul>
       </div>
     </div>
   </nav>
+
   <!-- Navbar Video Bar -->
   <div class="navbar-video-bar">
     <video src="data/navbar_loop.mp4" autoplay loop muted></video>
@@ -1450,33 +1321,38 @@ body {
   </div>
 </section>
 
-   <footer class="site-footer py-4 mt-5 border-top">
-  <div class="container text-center text-light">
-    <div class="row">
-      <div class="col-md-4 mb-2">
-        <h5 class="fw-bold mb-3">Quick Links</h5>
-        <a href="index.html" class="text-decoration-none d-block">Home</a>
-        <a href="leaderboard.html" class="text-decoration-none d-block">Leaderboard</a>
-        <a href="about.html" class="text-decoration-none d-block">About</a>
-        <a href="contact.html" class="text-decoration-none d-block">Contact</a>
+  <footer class="site-footer">
+  <div class="container">
+    <div class="row text-center text-md-start align-items-start">
+      <div class="col-md-4 mb-3">
+        <h5><i class="fas fa-link me-2"></i>Quick Links</h5>
+        <a class="footer-link" href="index.html"><i class="fa fa-home me-2"></i>Home</a>
+        <a class="footer-link" href="leaderboard.html"><i class="fa fa-trophy me-2"></i>Leaderboard</a>
+        <a class="footer-link" href="about.html"><i class="fa fa-info-circle me-2"></i>About</a>
+        <a class="footer-link" href="contact.html"><i class="fa fa-envelope me-2"></i>Contact</a>
       </div>
-      <div class="col-md-4 mb-2">
-        <h5 class="fw-bold mb-3">Contact</h5>
-        <p class="mb-1"><i class="fas fa-envelope"></i> info@proarcade.com</p>
-        <p><i class="fab fa-whatsapp"></i> +92 123 4567890</p>
-        <div>
-          <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
-          <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
-          <a href="#"><i class="fab fa-youtube fa-lg"></i></a>
+      <div class="col-md-4 mb-3 text-center">
+        <h5><i class="fas fa-headset me-2"></i>Contact</h5>
+        <div><i class="fas fa-envelope"></i> info@proarcade.com</div>
+        <div class="mb-2"><i class="fab fa-whatsapp"></i> +92 123 4567890</div>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+          <a href="#"><i class="fab fa-discord"></i> Discord</a>
         </div>
       </div>
-      <div class="col-md-4 mb-2">
-        <h5 class="fw-bold mb-3">Arcade Info</h5>
-        <p class="mb-2">© 2025 Pro Arcade.<br>By Amna Sanober.</p>
+      <div class="col-md-4 mb-3 text-md-end text-center">
+        <h5><i class="fas fa-info-circle me-2"></i>Arcade Info</h5>
+        <p class="mb-1">© 2025 <b>Pro Arcade</b></p>
+        <p class="mb-0">By <b>Amna Sanober</b></p>
       </div>
     </div>
+    <hr class="border border-info border-2 opacity-50">
+    <p class="footer-copy text-center mb-0">Made with <i class="fas fa-heart text-danger"></i> for Neon Arcade lovers.</p>
   </div>
 </footer>
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
