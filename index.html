@@ -12,8 +12,66 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap"
     rel="stylesheet"> 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="index.html">
+   <script src="app-user.js" defer></script>
+
   <style>
+    /* Make sure the dropdown overlays the navbar-video-bar */
+.site-footer {
+  background: #191e31;
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 -3px 18px #17f3ff22, 0 -1px 11px #f12fbb18;
+  padding: 28px 0;
+  margin-top: 36px;
+  color: #dff7ff;   /* 🔹 default footer text light blue */
+}
+
+.site-footer h5 {
+  color: var(--accent);
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-shadow: 0 0 10px #17f3ff55;
+}
+
+.site-footer p,
+.site-footer div {
+  color: #f1f1f1; /* 🔹 vivid white text for readability */
+  font-weight: 600;
+}
+
+.footer-link {
+  color: var(--primary);
+  text-decoration: none;
+  display: block;
+  margin: .2rem 0;
+  font-weight: 700;
+}
+.footer-link:hover {
+  color: var(--accent);
+  text-shadow: 0 0 8px #17f3ff77;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pink);
+  text-decoration: none;
+  transition: .2s;
+  font-weight: 700;
+}
+.footer-social a:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+  text-shadow: 0 0 8px #17f3ff88;
+}
+
+.footer-copy {
+  opacity: .95;
+  color: #ffc107;
+  font-weight: 700;
+}
+
+
     :root {
   --primary: #ffc107;
   --accent: #17f3ff;
@@ -912,25 +970,44 @@ body {
 <body>
   <div id="particles-js"></div>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse mt-1" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
-           <li class="nav-item"><a class="nav-link" href="login.html"><i class="fa fa-envelope"></i> Login / Sign Up</a></li>
-        </ul>
-      </div>
+  <!-- NAVBAR -->
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top" style="background:#0f1320;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html">
+      <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse mt-1" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+
+        <!-- Shown when NOT logged in -->
+        <li class="nav-item" id="navLoginLink">
+          <a class="nav-link" href="login.html"><i class="fa fa-sign-in-alt"></i> Login / Sign Up</a>
+        </li>
+
+        <!-- Shown when LOGGED IN -->
+        <li class="nav-item dropdown" id="navUserWrap" style="display:none;">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa fa-user"></i> <span id="navUserName"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="leaderboard.html"><i class="fa fa-trophy me-2"></i>Leaderboard</a></li>
+            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fa fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
+
 
   <!-- Navbar Video Bar -->
   <div class="navbar-video-bar">
@@ -1355,7 +1432,7 @@ body {
 
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
   <!-- Particles.js for background animation -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
@@ -1432,7 +1509,7 @@ body {
 
   <!-- Sound Elements -->
   <audio id="bgSound" src="data/background-game-145867.mp3" preload="auto" loop></audio>
-  <audio id="clickSound" src="data/single-mouse-click-sound-hd-379373.mp3 preload="auto"></audio>
+<audio id="clickSound" src="data/single-mouse-click-sound-hd-379373.mp3" preload="auto"></audio>
   <audio id="hoverSound" src="data/hover_sound.wav" preload="auto"></audio>
 
   <!-- Bootstrap JS -->
@@ -1523,6 +1600,16 @@ body {
       });
     });
   </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.bootstrap) {
+      document.querySelectorAll('.dropdown-toggle').forEach(el => {
+        new bootstrap.Dropdown(el);
+      });
+    }
+  });
+</script>
+
 </body>
 
 </html>

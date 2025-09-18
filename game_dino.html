@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="app-user.js" defer></script>
+
   <style>
     :root {
       --primary: #ffc107;
@@ -126,25 +128,43 @@
   <div id="particles-js"></div>
   <div class="content-main">
     <!-- ===== Navbar ===== -->
-     <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse mt-1" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
-           <li class="nav-item"><a class="nav-link" href="login.html"><i class="fa fa-envelope"></i> Login / Sign Up</a></li>
-        </ul>
-      </div>
+   <!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top" style="background:#0f1320;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html">
+      <i class="fas fa-gamepad text-warning"></i> DR. <span>RACER PRO</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse mt-1" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="leaderboard.html"><i class="fa fa-trophy"></i> Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fa fa-envelope"></i> Contact</a></li>
+
+        <!-- Shown when NOT logged in -->
+        <li class="nav-item" id="navLoginLink">
+          <a class="nav-link" href="login.html"><i class="fa fa-sign-in-alt"></i> Login / Sign Up</a>
+        </li>
+
+        <!-- Shown when LOGGED IN -->
+        <li class="nav-item dropdown" id="navUserWrap" style="display:none;">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa fa-user"></i> <span id="navUserName"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="leaderboard.html"><i class="fa fa-trophy me-2"></i>Leaderboard</a></li>
+            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fa fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
+
 
     <main class="container py-4 game-wrap">
       <div class="game-card-arcade">
